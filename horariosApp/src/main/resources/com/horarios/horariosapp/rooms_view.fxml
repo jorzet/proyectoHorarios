@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.horarios.horariosapp.controllers.RoomsViewController"
+      prefHeight="400.0"
+      prefWidth="600.0">
+
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <HBox>
+        <Button fx:id="backButton" text="Atras" onAction="#onBackButtonClick"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Label alignment="CENTER" text="Añadir Salones" />
+        <Region HBox.hgrow="ALWAYS" />
+    </HBox>
+
+    <HBox>
+        <VBox>
+            <Label text="Salon" />
+            <TextField fx:id="roomTextField"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <VBox>
+            <Label text="Capacidad" />
+            <TextField fx:id="capacityTextField"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS" />
+
+        <Button fx:id="addButton" text="Add" onAction="#onAddRoomButtonClick"/>
+    </HBox>
+
+    <ListView fx:id="currentRoomsListView" prefHeight="200.0" prefWidth="200.0" />
+
+</VBox>

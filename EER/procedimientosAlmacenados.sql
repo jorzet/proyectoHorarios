@@ -1,0 +1,199 @@
+use mydb;
+
+/* CREACION DE PRODEDIMIENTOS ALMACENADOS PARA AÑADIR*/
+
+DELIMITER $$
+CREATE PROCEDURE insertTimes(IN dayname VARCHAR(45),IN times VARCHAR(45), OUT response VARCHAR(100))
+BEGIN
+	IF NOT EXISTS (SELECT t.idTimes FROM mydb.times as t WHERE t.times = times AND t.dayname = dayname)
+	THEN
+		INSERT INTO mydb.times (dayname, times)
+		VALUES (dayname, times);
+		SET response='Horario registrado correctamente';
+	ELSE
+		SET response='El horario ya se ha registrado';
+	END IF;
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE insertTeacher(IN teacherName VARCHAR(45), IN teacherFirstLastName VARCHAR(45), IN teacherSecondLastName VARCHAR(45), OUT response VARCHAR(100))
+BEGIN
+  INSERT INTO mydb.teacher (teacherName, teacherFirstLastName, teacherSecondLastName)
+  VALUES (teacherName, teacherFirstLastName, teacherSecondLastName);
+  SET response='Profesor registrado correctamente';
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE insertRoom(IN roomName VARCHAR(45), IN capacity integer, OUT response VARCHAR(100))
+BEGIN
+	IF NOT EXISTS (SELECT r.idRoom FROM mydb.room as r WHERE r.roomName=roomName)
+	THEN
+		INSERT INTO mydb.room (roomName, capacity)
+		VALUES (roomName, capacity);
+		SET response='Aula registrada correctamente';
+  ELSE 
+		SET response='ya existe un aula registrada con ese nombre';
+  END IF;
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE insertModule(IN moduleCode VARCHAR(100), IN moduleName VARCHAR(200), IN teacherId int, OUT response VARCHAR(100))
+BEGIN
+  INSERT INTO mydb.module (moduleCode, moduleName, Teacher_idTeacher)
+  VALUES (moduleCode, moduleName, teacherId);
+  SET response='Modulo registrado correctamente';
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE insertGroups(IN size VARCHAR(45), IN idModule integer, OUT response VARCHAR(100))
+BEGIN
+  INSERT INTO mydb.group (size, Module_idModule)
+  VALUES (size, idModule);
+  SET response='Modulo registrado correctamente';
+END $$
+
+/* CREACION DE PRODEDIMIENTOS ALMACENADOS PARA ELIMINAR*/
+
+/* CREACION DE PRODEDIMIENTOS ALMACENADOS PARA EDITAR*/
+
+/* CREACION DE PRODEDIMIENTOS ALMACENADOS PARA OBTENER*/
+
+DELIMITER $$
+CREATE PROCEDURE getTeacherById(IN idTeacher integer, OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT t.idTeacher FROM mydb.teacher as t where t.idTeacher = idTeacher)
+	THEN
+		SELECT * FROM mydb.teacher as teacher where teacher.idTeacher = idTeacher;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No existe el profesor';
+	END IF;
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE getAllTeachers(OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT t.idTeacher FROM mydb.teacher as t)
+	THEN
+		SELECT * FROM mydb.teacher as teacher where teacher.idTeacher = idTeacher;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No hay profesores en la BD';
+	END IF;
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE getAllTeachersNames(OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT t.idTeacher FROM mydb.teacher as t)
+	THEN
+		SELECT teacher.teacherName, teacherFirstLastName, teacher.teacherSecondLastName FROM mydb.teacher as teacher;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No hay profesores en la BD';
+	END IF;
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE getAllRooms(OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT r.idRoom FROM mydb.room as r)
+	THEN
+		SELECT * FROM mydb.room as room;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No hay aulas en la BD';
+	END IF;
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE getAllTimes(OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT t.idTimes FROM mydb.times as t)
+	THEN
+		SELECT * FROM mydb.times as time;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No hay horarios en la BD';
+	END IF;
+END $$
+
+
+DELIMITER $$
+CREATE PROCEDURE getAllModules(OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT m.idModule FROM mydb.module as m)
+	THEN
+		SELECT * FROM mydb.module as module;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No hay modulos en la BD';
+	END IF;
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE getAllGroups(OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT g.idGroup FROM mydb.group as g)
+	THEN
+		SELECT * FROM mydb.group;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No hay grupos en la BD';
+	END IF;
+END $$
+
+
+DELIMITER $$
+CREATE PROCEDURE getAllModuleIdbyGroupId(IN groupId int, OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT m.idModule FROM mydb.group as g JOIN mydb.module as m WHERE g.Module_idModule=m.idModule and g.idGroup=groupId)
+	THEN
+		SELECT m.idModule FROM mydb.group as g JOIN mydb.module as m WHERE g.Module_idModule=m.idModule and g.idGroup=groupId;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No hay grupos relacionados al moduleId en la BD';
+	END IF;
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE getAllTeachersIdByModuleId(IN moduleId int, OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT t.idTeacher FROM mydb.module as m JOIN mydb.teacher as t WHERE m.Teacher_idTeacher=t.idTeacher AND m.idModule=moduleId)
+	THEN
+		SELECT t.idTeacher FROM mydb.module as m JOIN mydb.teacher as t WHERE m.Teacher_idTeacher=t.idTeacher AND m.idModule=moduleId;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No hay grupos relacionados al moduleId en la BD';
+	END IF;
+END $$
+
+
+
+
+/* ELIMINAR PROCEDIMIENTOS ALMACENADOS*/
+DROP PROCEDURE insertGroups;
+DROP PROCEDURE insertTimes;
+
+/*LLAMAR PRODECIMIENTOS ALMACENADOS*/
+
+
+CALL getAllTeachers(@response);
+select @response
+CALL getTeacherById(1, @response);
+select @response
+CALL getAllTeachersNames(@response);
+select @response
+CALL getAllRooms(@response);
+select @response
+CALL getAllTimes(@response);
+select @response
+CALL getAllModules(@response);
+select @response
+CALL getAllGroups(@response);
+select @response
+CALL getAllModuleIdByGroupId(1, @response);
+select @response;
+CALL getAllTeachersIdByModuleId(1, @response);
+select @response
+
