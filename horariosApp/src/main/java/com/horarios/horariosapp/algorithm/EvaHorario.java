@@ -57,8 +57,8 @@ public class EvaHorario {
         this.groups.put(groupId, new Grupo(groupId, groupSize, moduleIds));
         this.numClasses = 0;
     }
-    public void addTimeslot(int timeslotId, String timeslot) {
-        this.timeslots.put(timeslotId, new Horario(timeslotId, timeslot));
+    public void addTimeslot(int timeslotId, String timeslot, String day) {
+        this.timeslots.put(timeslotId, new Horario(timeslotId, timeslot, day));
     }
     public void createClasses(Individual individual) {
         Class classes[] = new Class[this.getNumClasses()];
@@ -109,6 +109,7 @@ public class EvaHorario {
         return (Grupo[]) this.groups.values().toArray(new Grupo[this.groups.size()]);
     }
     public Horario getTimeslot(int timeslotId) { return (Horario) this.timeslots.get(timeslotId); }
+
     public Horario getRandomTimeslot() {
         Object[] timeslotArray = this.timeslots.values().toArray();
         Horario timeslot = (Horario) timeslotArray[(int) (timeslotArray.length * Math.random())];

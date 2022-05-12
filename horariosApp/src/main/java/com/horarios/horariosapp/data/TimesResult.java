@@ -7,6 +7,9 @@ public class TimesResult {
     private String roomCode;
     private String teacherName;
     private String time;
+    private String day;
+
+    private boolean isTitle;
 
     public int getClassNumber() {
         return classNumber;
@@ -54,5 +57,21 @@ public class TimesResult {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setIsTitle(boolean title) {
+        this.isTitle = title;
+    }
+
+    public boolean isTitle() {
+        return isTitle;
     }
 }

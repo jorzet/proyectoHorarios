@@ -7,27 +7,24 @@ import com.horarios.horariosapp.algorithm.Poblacion;
 import com.horarios.horariosapp.data.*;
 import com.horarios.horariosapp.data.Class;
 import com.horarios.horariosapp.repository.Dao;
-import com.horarios.horariosapp.views.TimeResultListCell;
+import com.horarios.horariosapp.views.ModuleTreeCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TimesResultViewController implements Initializable {
 
@@ -38,7 +35,7 @@ public class TimesResultViewController implements Initializable {
     @FXML
     private Label crossLabel;
     @FXML
-    private ListView timesResultListView;
+    private TreeView<TimesResult> timesResultListView;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -83,6 +80,7 @@ public class TimesResultViewController implements Initializable {
             timeResult.setRoomCode(timetable.getRoom(bestClass.getRoomId()).getRoomNumber());
             timeResult.setTeacherName(timetable.getProfessor(bestClass.getProfessorId()).getProfessorName());
             timeResult.setTime(timetable.getTimeslot(bestClass.getTimeslotId()).getTimeslot());
+            timeResult.setDay(timetable.getTimeslot(bestClass.getTimeslotId()).getDay());
             timesResult.add(timeResult);
 
             System.out.println("Clase " + timeResult.getClassNumber() + ":");
@@ -91,13 +89,33 @@ public class TimesResultViewController implements Initializable {
             System.out.println("Aula: " + timeResult.getRoomCode());
             System.out.println("Profesor: " + timeResult.getTeacherName());
             System.out.println("Horario: " + timeResult.getTime());
+            System.out.println("Dia: " + timeResult.getDay());
             System.out.println("-----");
 
             classIndex++;
         }
 
-        timesResultListView.setItems(timesResult);
-        timesResultListView.setCellFactory((Callback<ListView<TimesResult>, ListCell<TimesResult>>) param -> new TimeResultListCell());
+        Map<String, List<TimesResult>> mapResult =
+                timesResult.stream().collect(Collectors.groupingBy(w -> w.getModuleName()));
+
+        TreeItem<TimesResult> rootNode = new TreeItem<>();
+        rootNode.setExpanded(true);
+
+        Iterator<List<TimesResult>> iterator = mapResult.values().iterator();
+        while (iterator.hasNext()) {
+            List<TimesResult> timesResults = iterator.next();
+            TimesResult timesResultTitle = createTimeResultTitle(timesResults.get(0));
+            TreeItem<TimesResult> groupNode = new TreeItem<>(timesResultTitle);
+            for (TimesResult timesResult1: timesResults) {
+                timesResult1.setIsTitle(false);
+                groupNode.getChildren().addAll(new TreeItem<>(timesResult1));
+            }
+            rootNode.getChildren().addAll(groupNode);
+        }
+
+        timesResultListView.setRoot(rootNode);
+        timesResultListView.setShowRoot(false);
+        timesResultListView.setCellFactory(p -> new ModuleTreeCell());
     }
 
     private EvaHorario getTimesTable() {
@@ -116,7 +134,7 @@ public class TimesResultViewController implements Initializable {
 
         if (times != null) {
             for (Horario time : times) {
-                timetable.addTimeslot(time.getTimeslotId(), time.getDay() + " " + time.getTimeslot());
+                timetable.addTimeslot(time.getTimeslotId(), time.getTimeslot(), time.getDay() );
             }
         }
 
@@ -159,10 +177,17 @@ public class TimesResultViewController implements Initializable {
     }
 
     public void onBackButtonClick(ActionEvent actionEvent) throws Exception{
-        Parent window3 = FXMLLoader.load(Application.class.getResource("times_creator_view.fxml"));
+        Parent window3 = FXMLLoader.load(Objects.requireNonNull(Application.class.getResource("times_creator_view.fxml")));
         Scene newScene = new Scene(window3);
         Stage mainWindow = (Stage)  ((Node)actionEvent.getSource()).getScene().getWindow();
 
         mainWindow.setScene(newScene);
+    }
+
+    private TimesResult createTimeResultTitle(TimesResult timesResult) {
+        TimesResult timesResult1 = new TimesResult();
+        timesResult1.setModuleName(timesResult.getModuleName());
+        timesResult1.setIsTitle(true);
+        return timesResult1;
     }
 }

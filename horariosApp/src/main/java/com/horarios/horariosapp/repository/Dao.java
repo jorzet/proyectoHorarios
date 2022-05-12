@@ -1,7 +1,6 @@
 package com.horarios.horariosapp.repository;
 
 import com.horarios.horariosapp.data.*;
-import com.horarios.horariosapp.data.Class;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,13 +14,6 @@ public class Dao {
     String SQL = null;
     ResultSetMetaData rmeta = null;
     String resultado = null;
-
-    private Profesor profesor;
-    private Aula room;
-    private Modulo module;
-    private Grupo group;
-    private Horario time;
-
     public Dao(){}
 
     public ArrayList<Profesor> getAllTeachers() {
@@ -49,7 +41,7 @@ public class Dao {
                         rs.beforeFirst();
                         System.out.println("No es nulo"+rs);
                         while(rs.next()) {
-                            profesor = new Profesor();
+                            Profesor profesor = new Profesor();
                             profesor.setProfessorId(rs.getInt(1));
                             profesor.setProfessorName(rs.getNString(2));
                             profesor.setProfesorFirstLastName(rs.getNString(3));
@@ -149,7 +141,7 @@ public class Dao {
                         rs.beforeFirst();
                         System.out.println("No es nulo"+rs);
                         while(rs.next()) {
-                            room = new Aula();
+                            Aula room = new Aula();
                             room.setRoomId(rs.getInt(1));
                             room.setRoomNumber(rs.getNString(2));
                             room.setCapacity(rs.getInt(3));
@@ -200,7 +192,7 @@ public class Dao {
                         rs.beforeFirst();
                         System.out.println("No es nulo"+rs);
                         while(rs.next()) {
-                            time = new Horario();
+                            Horario time = new Horario();
 
                             time.setTimeslotId(rs.getInt(1));
                             time.setDay(rs.getNString(2));
@@ -252,7 +244,7 @@ public class Dao {
                         rs.beforeFirst();
                         System.out.println("No es nulo"+rs);
                         while(rs.next()) {
-                            module = new Modulo();
+                            Modulo module = new Modulo();
                             module.setModuleId(rs.getInt(1));
                             module.setModuleCode(rs.getNString(2));
                             module.setModule(rs.getNString(3));
@@ -352,7 +344,7 @@ public class Dao {
                         rs.beforeFirst();
                         System.out.println("No es nulo"+rs);
                         while(rs.next()) {
-                            group = new Grupo();
+                            Grupo group = new Grupo();
                             group.setGroupId(rs.getInt(1));
                             group.setGroupSize(Integer.parseInt(rs.getNString(2)));
                             group.setModuleIds(new int[]{rs.getInt(3)});

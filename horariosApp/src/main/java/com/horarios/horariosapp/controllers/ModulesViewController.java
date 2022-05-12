@@ -1,6 +1,7 @@
 package com.horarios.horariosapp.controllers;
 
 import com.horarios.horariosapp.Application;
+import com.horarios.horariosapp.controllers.base.BaseController;
 import com.horarios.horariosapp.data.Modulo;
 import com.horarios.horariosapp.data.Profesor;
 import com.horarios.horariosapp.repository.Dao;
@@ -9,7 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,7 +22,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class ModulesViewController implements Initializable {
+public class ModulesViewController extends BaseController {
 
     @FXML
     private CheckComboBox teacherComboBox;
@@ -33,8 +33,35 @@ public class ModulesViewController implements Initializable {
     @FXML
     private ListView currentModulesListView;
 
-
     private ArrayList<Profesor> teachers;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Dao dao = new Dao();
+        teachers = dao.getAllTeachers();
+
+        if (teachers != null) {
+            ObservableList<String> observableTeachers = FXCollections.observableArrayList();
+            for (Profesor teacher : teachers) {
+                observableTeachers.add(teacher.getProfessorName() + " " + teacher.getProfesorFirstLastName() + " " + teacher.getProfesorSecondtLastName());
+            }
+            teacherComboBox.getItems().addAll(observableTeachers);
+        }
+
+        ArrayList<Modulo> modules = dao.getAllModules();
+        if (modules != null) {
+            for (Modulo module : modules) {
+                ArrayList<Integer> teachersId = dao.getAllTeachersIdByModuleId(module.getModuleId());
+                StringBuilder ids = new StringBuilder();
+                ids.append("{");
+                for (Integer integer : teachersId) {
+                    ids.append(integer).append(", ");
+                }
+                ids.append("}");
+                currentModulesListView.getItems().add("codigo: " + module.getModuleCode() + " nombre: " + module.getModuleName() + " profesores: " + ids);
+            }
+        }
+    }
 
     public void onBackButtonClick(ActionEvent actionEvent) throws Exception{
         Parent window3;
@@ -75,34 +102,6 @@ public class ModulesViewController implements Initializable {
 
             Stage mainWindow = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             mainWindow.show();
-        }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        Dao dao = new Dao();
-        teachers = dao.getAllTeachers();
-
-        if (teachers != null) {
-            ObservableList<String> observableTeachers = FXCollections.observableArrayList();
-            for (Profesor teacher : teachers) {
-                observableTeachers.add(teacher.getProfessorName() + " " + teacher.getProfesorFirstLastName() + " " + teacher.getProfesorSecondtLastName());
-            }
-            teacherComboBox.getItems().addAll(observableTeachers);
-        }
-
-        ArrayList<Modulo> modules = dao.getAllModules();
-        if (modules != null) {
-            for (Modulo module : modules) {
-                ArrayList<Integer> teachersId = dao.getAllTeachersIdByModuleId(module.getModuleId());
-                StringBuilder ids = new StringBuilder();
-                ids.append("{");
-                for (Integer integer : teachersId) {
-                    ids.append(integer).append(", ");
-                }
-                ids.append("}");
-                currentModulesListView.getItems().add("codigo: " + module.getModuleCode() + " nombre: " + module.getModuleName() + " profesores: " + ids);
-            }
         }
     }
 }

@@ -1,31 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.geometry.Insets?>
-<VBox alignment="CENTER"
+<VBox xmlns="http://javafx.com/javafx/16"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.horarios.horariosapp.controllers.TimesViewController"
+      alignment="CENTER"
       prefHeight="400.0"
       prefWidth="600.0"
-      xmlns="http://javafx.com/javafx/16"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.horarios.horariosapp.controllers.TimesViewController">
+      spacing="20.0">
 
+    <!-- PADDING -->
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
+    <!-- HEADER -->
     <HBox>
-        <Button fx:id="backButton" text="Atras" onAction="#onBackButtonClick"/>
+        <Button onAction="#onBackButtonClick" style="-fx-background-color: transparent;">
+            <graphic>
+                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/back-arrow.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
         <Region HBox.hgrow="ALWAYS" />
-        <Label alignment="CENTER" text="Añadir Horas de clase" />
+        <Label alignment="CENTER" text="Añadir Horas de clase">
+            <font>
+                <Font name="System Bold" size="20.0" />
+            </font>
+        </Label>
         <Region HBox.hgrow="ALWAYS" />
     </HBox>
 
+    <!-- CONTENT -->
     <HBox>
         <VBox>
             <Label text="Dia" />
-            <Spinner fx:id="daySpinner" />
+            <Spinner fx:id="daySpinner"/>
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
         <VBox>
@@ -34,7 +52,15 @@
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
 
-        <Button fx:id="addButton" text="Add" onAction="#onAddButtonClick"/>
+        <Button onAction="#onAddButtonClick" style="-fx-background-color: transparent;">
+            <graphic>
+                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/plus-icon.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
     </HBox>
 
    <ListView fx:id="currentTimesListView" prefHeight="200.0" prefWidth="200.0" />

@@ -96,8 +96,7 @@ public class TimesViewController implements Initializable {
 
         System.out.println(result);
 
-        Stage mainWindow;
-        mainWindow = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        Stage mainWindow = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         mainWindow.show();
     }
 }

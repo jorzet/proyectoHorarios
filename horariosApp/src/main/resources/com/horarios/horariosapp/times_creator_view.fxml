@@ -2,64 +2,104 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER"
-      prefHeight="400.0"
-      prefWidth="600.0"
-      spacing="20.0"
-      xmlns:fx="http://javafx.com/fxml/1"
-      xmlns="http://javafx.com/javafx/16" fx:controller="com.horarios.horariosapp.Controller">
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.horarios.horariosapp.Controller">
 
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
-    <Label fx:id="welcomeText" text="Bienvenido al creador de horarios"/>
+    <Label text="Bienvenido al creador de horarios">
+        <font>
+            <Font name="System Bold" size="20.0" />
+        </font>
+    </Label>
+    <HBox>
+        <Label prefWidth="70" text="Salones" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Label fx:id="totalRoomsText" prefWidth="50" text="0" />
+        <Region HBox.hgrow="ALWAYS" />
+
+        <Button onAction="#onEditRoomsButtonClick" style="-fx-background-color: transparent;">
+            <graphic>
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@images/plus-icon.png" />
+                </image>
+            </ImageView>
+            </graphic>
+        </Button>
+    </HBox>
 
     <HBox>
-        <Label fx:id="roomsText"  text="Salones"/>
+        <Label prefWidth="70" text="Horarios" />
         <Region HBox.hgrow="ALWAYS" />
-        <Label fx:id="totalRoomsText"  text="0"/>
+        <Label fx:id="totalTimesText" prefWidth="50" text="0" />
         <Region HBox.hgrow="ALWAYS" />
 
-        <Button onAction="#onEditRoomsButtonClick" text="Añadir/Quitar" />
+        <Button onAction="#onEditTimesButtonClick" style="-fx-background-color: transparent;">
+            <graphic>
+                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/plus-icon.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
     </HBox>
 
-    <HBox >
-        <Label fx:id="timesText"  text="Horarios"/>
+    <HBox>
+        <Label prefWidth="70" text="Profesores" />
         <Region HBox.hgrow="ALWAYS" />
-        <Label fx:id="totalTimesText"  text="0"/>
+        <Label fx:id="totalTeachersText" prefWidth="50" text="0" />
         <Region HBox.hgrow="ALWAYS" />
 
-        <Button onAction="#onEditTimesButtonClick" text="Añadir/Quitar" />
+        <Button onAction="#onEditTeachersButtonClick" style="-fx-background-color: transparent;">
+            <graphic>
+                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/plus-icon.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
     </HBox>
 
-    <HBox >
-        <Label fx:id="teachersText"  text="Profesores"/>
+    <HBox>
+        <Label prefWidth="70" text="Modulos" />
         <Region HBox.hgrow="ALWAYS" />
-        <Label fx:id="totalTeachersText"  text="0"/>
+        <Label fx:id="totalModulesText" prefWidth="50" text="0" />
         <Region HBox.hgrow="ALWAYS" />
 
-        <Button onAction="#onEditTeachersButtonClick" text="Añadir/Quitar" />
+        <Button onAction="#onEditModulesButtonClick" style="-fx-background-color: transparent;">
+            <graphic>
+                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/plus-icon.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
     </HBox>
 
-    <HBox >
-        <Label fx:id="modulesText"  text="Modulos"/>
+    <HBox>
+        <Label prefWidth="70" text="Grupos" />
         <Region HBox.hgrow="ALWAYS" />
-        <Label fx:id="totalModulesText"  text="0"/>
-        <Region HBox.hgrow="ALWAYS" />
-
-        <Button onAction="#onEditModulesButtonClick" text="Añadir/Quitar" />
-    </HBox>
-
-    <HBox >
-        <Label fx:id="groupsText"  text="Grupos"/>
-        <Region HBox.hgrow="ALWAYS" />
-        <Label fx:id="totalGoupsText"  text="0"/>
+        <Label fx:id="totalGoupsText" prefWidth="50" text="0" />
         <Region HBox.hgrow="ALWAYS" />
 
-        <Button onAction="#onEditGroupsButtonClick" text="Añadir/Quitar" />
+        <Button onAction="#onEditGroupsButtonClick" style="-fx-background-color: transparent;">
+            <graphic>
+                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/plus-icon.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
     </HBox>
 
     <Button onAction="#onCreateTimesButtonClick" text="Crear horario" />

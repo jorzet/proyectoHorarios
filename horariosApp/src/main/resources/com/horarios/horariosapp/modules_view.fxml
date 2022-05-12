@@ -1,50 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import org.controlsfx.control.CheckComboBox?>
 <?import javafx.geometry.Insets?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.horarios.horariosapp.controllers.ModulesViewController"
+      alignment="CENTER"
       prefHeight="400.0"
-      prefWidth="600.0">
+      prefWidth="600.0"
+      spacing="20.0">
 
+    <!-- PADDING -->
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
+    <!-- HEADER -->
     <HBox>
-        <Button fx:id="backButton" text="Atras" onAction="#onBackButtonClick"/>
+        <Button style="-fx-background-color: transparent;" onAction="#onBackButtonClick">
+            <graphic>
+                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/back-arrow.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
         <Region HBox.hgrow="ALWAYS" />
-        <Label alignment="CENTER" text="Añadir modulos" />
+        <Label alignment="CENTER" text="Añadir modulos">
+            <font>
+                <Font name="System Bold" size="20.0" />
+            </font>
+        </Label>
         <Region HBox.hgrow="ALWAYS" />
     </HBox>
 
-
-
+    <!-- CONTENT -->
     <HBox>
-        <VBox>
-            <Label text="Codigo de modulo" />
-            <TextField fx:id="moduleCodeTextField" prefWidth="150"/>
-        </VBox>
+        <TextField fx:id="moduleCodeTextField" prefWidth="150" promptText="Codigo de modulo"/>
         <Region HBox.hgrow="ALWAYS" />
-        <VBox>
-            <Label text="Nombre" />
-            <TextField fx:id="moduleNameTextField" prefWidth="150"/>
-        </VBox>
+        <TextField fx:id="moduleNameTextField" prefWidth="150" promptText="Nombre"/>
         <Region HBox.hgrow="ALWAYS" />
-        <VBox>
-            <Label text="Profesores" />
-            <CheckComboBox fx:id="teacherComboBox" prefWidth="150"/>
-        </VBox>
+        <CheckComboBox fx:id="teacherComboBox" prefWidth="150" title="Profesores"/>
         <Region HBox.hgrow="ALWAYS" />
 
-        <Button fx:id="addButton" text="Add" onAction="#onAddModuleButtonClick"/>
+        <Button onAction="#onAddModuleButtonClick" style="-fx-background-color: transparent;">
+            <graphic>
+                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/plus-icon.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
     </HBox>
 
     <ListView fx:id="currentModulesListView" prefHeight="200.0" prefWidth="200.0" />

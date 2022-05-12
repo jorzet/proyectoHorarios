@@ -1,43 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.controlsfx.control.*?>
 
-<?import org.controlsfx.control.CheckComboBox?>
-<?import javafx.geometry.Insets?>
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
+<VBox xmlns="http://javafx.com/javafx/16"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.horarios.horariosapp.controllers.GroupsViewController"
+      alignment="CENTER"
       prefHeight="400.0"
-      prefWidth="600.0">
+      prefWidth="600.0"
+      spacing="20.0" >
 
+    <!-- PADDING -->
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
+    <!-- HEADER -->
     <HBox>
-        <Button fx:id="backButton" text="Atras" onAction="#onBackButtonClick"/>
+        <Button onAction="#onBackButtonClick" style="-fx-background-color: transparent;">
+            <graphic>
+                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/back-arrow.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
         <Region HBox.hgrow="ALWAYS" />
-        <Label alignment="CENTER" text="Añadir grupo" />
+        <Label alignment="CENTER" text="Añadir grupo">
+            <font>
+                <Font name="System Bold" size="20.0" />
+            </font>
+        </Label>
         <Region HBox.hgrow="ALWAYS" />
     </HBox>
 
+    <!-- CONTENT -->
     <HBox>
-        <VBox>
-            <Label text="Capacidad" />
-            <TextField fx:id="capacityTextField" prefWidth="150"/>
-        </VBox>
+        <TextField fx:id="capacityTextField" promptText="Capacidad" prefWidth="150" />
         <Region HBox.hgrow="ALWAYS" />
-        <VBox>
-            <Label text="Modulo" />
-            <CheckComboBox fx:id="modulesComboBox" prefWidth="150"/>
-        </VBox>
+        <CheckComboBox fx:id="modulesComboBox" prefWidth="150" title="Modulo"/>
         <Region HBox.hgrow="ALWAYS" />
 
-        <Button fx:id="addButton" text="Add" onAction="#onAddGroupButtonClick"/>
+        <Button onAction="#onAddGroupButtonClick" style="-fx-background-color: transparent;">
+            <graphic>
+                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/plus-icon.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
     </HBox>
 
     <ListView fx:id="currentGroupsListView" prefHeight="200.0" prefWidth="200.0" />

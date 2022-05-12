@@ -6,9 +6,10 @@ public class Horario {
     private String day;
 
     public Horario() {}
-    public Horario(int timeslotId, String timeslot){
+    public Horario(int timeslotId, String timeslot, String day){
         this.timeslotId = timeslotId;
         this.timeslot = timeslot;
+        this.day = day;
     }
 
     public void setTimeslotId(int timeslotId) {
