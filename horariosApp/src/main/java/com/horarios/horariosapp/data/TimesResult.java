@@ -1,29 +1,29 @@
 package com.horarios.horariosapp.data;
 
 public class TimesResult {
-    private int classNumber;
-    private int groupNumber;
+    private String classNumber;
+    private String groupNumber;
     private String moduleName;
+    private String moduleCode;
     private String roomCode;
     private String teacherName;
     private String time;
     private String day;
-
     private boolean isTitle;
 
-    public int getClassNumber() {
+    public String getClassNumber() {
         return classNumber;
     }
 
-    public void setClassNumber(int classNumber) {
+    public void setClassNumber(String classNumber) {
         this.classNumber = classNumber;
     }
 
-    public int getGroupNumber() {
+    public String getGroupNumber() {
         return groupNumber;
     }
 
-    public void setGroupNumber(int groupNumber) {
+    public void setGroupNumber(String groupNumber) {
         this.groupNumber = groupNumber;
     }
 
@@ -33,6 +33,14 @@ public class TimesResult {
 
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
+    }
+
+    public String getModuleCode() {
+        return moduleCode;
+    }
+
+    public void setModuleCode(String moduleCode) {
+        this.moduleCode = moduleCode;
     }
 
     public String getRoomCode() {

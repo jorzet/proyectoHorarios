@@ -2,7 +2,6 @@ package com.horarios.horariosapp.views;
 
 import com.horarios.horariosapp.data.TimesResult;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
 import javafx.scene.layout.AnchorPane;

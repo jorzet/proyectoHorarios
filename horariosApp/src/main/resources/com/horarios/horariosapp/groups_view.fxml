@@ -42,9 +42,11 @@
 
     <!-- CONTENT -->
     <HBox>
-        <TextField fx:id="capacityTextField" promptText="Capacidad" prefWidth="150" />
+        <TextField fx:id="groupNameTextField" promptText="Nombre" prefWidth="120" />
         <Region HBox.hgrow="ALWAYS" />
-        <CheckComboBox fx:id="modulesComboBox" prefWidth="150" title="Modulo"/>
+        <TextField fx:id="capacityTextField" promptText="Capacidad" prefWidth="120" />
+        <Region HBox.hgrow="ALWAYS" />
+        <CheckComboBox fx:id="modulesComboBox" prefWidth="120" title="Modulo"/>
         <Region HBox.hgrow="ALWAYS" />
 
         <Button onAction="#onAddGroupButtonClick" style="-fx-background-color: transparent;">
@@ -58,5 +60,5 @@
         </Button>
     </HBox>
 
-    <ListView fx:id="currentGroupsListView" prefHeight="200.0" prefWidth="200.0" />
+    <ListView fx:id="currentGroupsListView" prefHeight="400.0" prefWidth="200.0" />
 </VBox>

@@ -96,36 +96,36 @@ select @response;
 
 /* INSERTAR AULAS*/
 
-CALL insertRoom("A2M1", 50, @response);
-CALL insertRoom("A2M1", 30, @response);
-CALL insertRoom("A3M1", 40, @response);
-CALL insertRoom("A4M1", 30, @response);
-CALL insertRoom("A5M1", 50, @response);
-CALL insertRoom("A6M1", 40, @response);
-CALL insertRoom("A7M1", 30, @response);
-CALL insertRoom("A8M1", 40, @response);
-CALL insertRoom("A9M1", 50, @response);
-CALL insertRoom("A10M1", 30, @response);
-CALL insertRoom("A1M2", 50, @response);
-CALL insertRoom("A2M2", 30, @response);
-CALL insertRoom("A3M2", 40, @response);
-CALL insertRoom("A4M2", 30, @response);
-CALL insertRoom("A5M2", 50, @response);
-CALL insertRoom("A6M2", 40, @response);
-CALL insertRoom("A7M2", 30, @response);
-CALL insertRoom("A8M2", 40, @response);
-CALL insertRoom("A9M2", 50, @response);
-CALL insertRoom("A10M2", 30, @response);
-CALL insertRoom("A1M3", 50, @response);
-CALL insertRoom("A2M3", 30, @response);
-CALL insertRoom("A3M3", 40, @response);
-CALL insertRoom("A4M3", 30, @response);
-CALL insertRoom("A5M3", 50, @response);
-CALL insertRoom("A6M3", 40, @response);
-CALL insertRoom("A7M3", 30, @response);
-CALL insertRoom("A8M3", 40, @response);
-CALL insertRoom("A9M3", 50, @response);
-CALL insertRoom("A10M3", 30, @response);
+CALL insertRoom("Aula 1", 50, @response);
+CALL insertRoom("Aula 2", 30, @response);
+CALL insertRoom("Aula 3", 40, @response);
+CALL insertRoom("Aula 4", 30, @response);
+CALL insertRoom("Aula 5", 50, @response);
+CALL insertRoom("Aula 6", 40, @response);
+CALL insertRoom("Aula 7", 30, @response);
+CALL insertRoom("Aula 8", 40, @response);
+CALL insertRoom("Aula 9", 50, @response);
+CALL insertRoom("Aula 10", 30, @response);
+CALL insertRoom("Aula 11", 50, @response);
+CALL insertRoom("Aula 12", 30, @response);
+CALL insertRoom("Aula 13", 40, @response);
+CALL insertRoom("Aula 14", 30, @response);
+CALL insertRoom("Aula 15", 50, @response);
+CALL insertRoom("Aula 16", 40, @response);
+CALL insertRoom("Aula 17", 30, @response);
+CALL insertRoom("Aula 18", 40, @response);
+CALL insertRoom("Aula 19", 50, @response);
+CALL insertRoom("Aula 20", 30, @response);
+CALL insertRoom("Aula 21", 50, @response);
+CALL insertRoom("Aula 22", 30, @response);
+CALL insertRoom("Aula 23", 40, @response);
+CALL insertRoom("Aula 24", 30, @response);
+CALL insertRoom("Aula 25", 50, @response);
+CALL insertRoom("Aula 26", 40, @response);
+CALL insertRoom("Aula 27", 30, @response);
+CALL insertRoom("Aula 28", 40, @response);
+CALL insertRoom("Aula 29", 50, @response);
+CALL insertRoom("Aula 30", 30, @response);
 
 /* INSERTAR MODULOS*/
 
@@ -151,42 +151,66 @@ CALL insertModule("AL1", "Algebra Lineal", 10, @response);
 
 /* INSERTAR GRUPOS*/
 
-CALL insertGroups(10, 1, @response);
-CALL insertGroups(10, 1, @response);
-CALL insertGroups(10, 1, @response);
-CALL insertGroups(10, 1, @response);
-CALL insertGroups(10, 1, @response);
-CALL insertGroups(10, 2, @response);
-CALL insertGroups(10, 3, @response);
-CALL insertGroups(10, 4, @response);
-CALL insertGroups(20, 5, @response);
-CALL insertGroups(20, 6, @response);
-CALL insertGroups(20, 7, @response);
-CALL insertGroups(20, 8, @response);
-CALL insertGroups(27, 5, @response);
-CALL insertGroups(27, 2, @response);
-CALL insertGroups(27, 8, @response);
-CALL insertGroups(27, 9, @response);
-CALL insertGroups(32, 1, @response);
-CALL insertGroups(32, 12, @response);
-CALL insertGroups(32, 9, @response);
-CALL insertGroups(32, 15, @response);
-CALL insertGroups(18, 12, @response);
-CALL insertGroups(18, 14, @response);
-CALL insertGroups(18, 13, @response);
-CALL insertGroups(18, 9, @response);
-CALL insertGroups(28, 1, @response);
-CALL insertGroups(18, 1, @response);
-CALL insertGroups(30, 1, @response);
-CALL insertGroups(10, 1, @response);
-CALL insertGroups(14, 1, @response);
-CALL insertGroups(18, 1, @response);
-CALL insertGroups(22, 1, @response);
-CALL insertGroups(26, 1, @response);
-CALL insertGroups(19, 1, @response);
-CALL insertGroups(29, 1, @response);
-CALL insertGroups(31, 1, @response);
-CALL insertGroups(35, 1, @response);
-CALL insertGroups(25, 1, @response);
-CALL insertGroups(19, 1, @response);
-CALL insertGroups(21, 1, @response);
+
+CALL insertGroups("Grupo 1", 10, true, @response);
+CALL insertGroups("Grupo 2", 20, true, @response);
+CALL insertGroups("Grupo 3", 27, true, @response);
+CALL insertGroups("Grupo 4", 32, true, @response);
+CALL insertGroups("Grupo 5", 18, true, @response);
+CALL insertGroups("Grupo 6",28, true, @response);
+CALL insertGroups("Grupo 7",18, true, @response);
+CALL insertGroups("Grupo 8",30, true, @response);
+CALL insertGroups("Grupo 9",10, true, @response);
+CALL insertGroups("Grupo 10",14, true, @response);
+CALL insertGroups("Grupo 11",18, true, @response);
+CALL insertGroups("Grupo 12",22, true, @response);
+CALL insertGroups("Grupo 13",26, true, @response);
+CALL insertGroups("Grupo 14",19, true, @response);
+CALL insertGroups("Grupo 15",29, false, @response);
+CALL insertGroups("Grupo 16",31, false, @response);
+CALL insertGroups("Grupo 17",35, false, @response);
+CALL insertGroups("Grupo 18",25, false, @response);
+CALL insertGroups("Grupo 19",19, false, @response);
+CALL insertGroups("Grupo 20",21, false, @response);
+
+/* INSERTAR GRUPOS*/
+CALL insertGroupsModuleTeacher(1, 1, 1, @response);
+CALL insertGroupsModuleTeacher(1, 2, 3, @response);
+CALL insertGroupsModuleTeacher(1, 3, 2, @response);
+CALL insertGroupsModuleTeacher(1, 4, 4, @response);
+
+CALL insertGroupsModuleTeacher(2, 5, 6, @response);
+CALL insertGroupsModuleTeacher(2, 6, 7, @response);
+CALL insertGroupsModuleTeacher(2, 7, 5, @response);
+CALL insertGroupsModuleTeacher(2, 8, 8, @response);
+
+CALL insertGroupsModuleTeacher(3, 5, 6, @response);
+CALL insertGroupsModuleTeacher(3, 2, 3, @response);
+CALL insertGroupsModuleTeacher(3, 8, 8, @response);
+CALL insertGroupsModuleTeacher(3, 9, 9, @response);
+
+CALL insertGroupsModuleTeacher(4, 1, 1, @response);
+CALL insertGroupsModuleTeacher(4, 12, 1, @response);
+CALL insertGroupsModuleTeacher(4, 9, 9, @response);
+CALL insertGroupsModuleTeacher(4, 15, 2, @response);
+
+CALL insertGroupsModuleTeacher(5, 12, 1, @response);
+CALL insertGroupsModuleTeacher(5, 14, 7, @response);
+CALL insertGroupsModuleTeacher(5, 13, 3, @response);
+CALL insertGroupsModuleTeacher(5, 9, 9, @response);
+
+CALL insertGroupsModuleTeacher(6, 1, 1, @response);
+CALL insertGroupsModuleTeacher(7, 1, 1, @response);
+CALL insertGroupsModuleTeacher(8, 1, 1, @response);
+CALL insertGroupsModuleTeacher(9, 1, 1, @response);
+CALL insertGroupsModuleTeacher(10, 1, 1, @response);
+CALL insertGroupsModuleTeacher(11, 1, 1, @response);
+CALL insertGroupsModuleTeacher(12, 1, 1, @response);
+CALL insertGroupsModuleTeacher(13, 1, 1, @response);
+CALL insertGroupsModuleTeacher(14, 1, 1, @response);
+CALL insertGroupsModuleTeacher(15, 1, 1, @response);
+CALL insertGroupsModuleTeacher(16, 1, 1, @response);
+CALL insertGroupsModuleTeacher(17, 1, 1, @response);
+CALL insertGroupsModuleTeacher(18, 1, 1, @response);
+CALL insertGroupsModuleTeacher(19, 1, 1, @response);
+CALL insertGroupsModuleTeacher(20, 1, 1, @response);

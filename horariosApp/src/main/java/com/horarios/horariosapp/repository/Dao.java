@@ -69,17 +69,69 @@ public class Dao {
         return null;
     }
 
-    public ArrayList<Integer> getAllTeachersIdByModuleId(int moduleID) {
+    public ArrayList<GroupModule> getAllModulesAndGroups() {
+        connection = new Connection();
+        ArrayList<GroupModule> groupModules = new ArrayList();
+        int f = 0;
+        try {
+            if (connection.initConnection() != null) {
+                // hace referencia a el procedimiento almacenado de la BD
+                SQL = "{call getAllModulesAndGroups (?)}";
+                sp = connection.conexion.prepareCall(SQL);
+                sp.setEscapeProcessing(true);
+                sp.setQueryTimeout(20);
+                sp.registerOutParameter(1, java.sql.Types.NVARCHAR);
+                rs = sp.executeQuery();
+                resultado = sp.getString(1);
+                if(resultado.equals("OK")){
+                    while(rs.next()){
+                        f = f+1;
+                    }
+                    if(f == 0){
+                        System.out.println("Es nulo"+rs);
+                    }
+                    else{
+                        rs.beforeFirst();
+                        System.out.println("No es nulo"+rs);
+                        while(rs.next()) {
+                            GroupModule groupModule = new GroupModule();
+                            groupModule.setIdGroup(rs.getInt(1));
+                            groupModule.setIdModule(rs.getInt(2));
+                            groupModule.setIdTeacher(rs.getInt(3));
+                            groupModules.add(groupModule);
+                        }
+                        return groupModules;
+                    }
+                }
+                else
+                    return null;
+
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                connection.closeConnection();
+                if(sp != null)
+                    sp.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Integer> getAllTeachersIdByModuleCode(String moduleCode) {
         connection = new Connection();
         ArrayList<Integer> teachersId = new ArrayList<>();
         int f = 0;
         try {
             if (connection.initConnection() != null) {
-                SQL = "{call getAllTeachersIdByModuleId (?,?)}";
+                SQL = "{call getAllTeachersIdByModuleCode (?,?)}";
                 sp = connection.conexion.prepareCall(SQL);
                 sp.setEscapeProcessing(true);
                 sp.setQueryTimeout(20);
-                sp.setInt(1, moduleID);
+                sp.setString(1, moduleCode);
                 sp.registerOutParameter(2, java.sql.Types.NVARCHAR);
                 rs = sp.executeQuery();
                 resultado = sp.getString(2);
@@ -346,8 +398,10 @@ public class Dao {
                         while(rs.next()) {
                             Grupo group = new Grupo();
                             group.setGroupId(rs.getInt(1));
-                            group.setGroupSize(Integer.parseInt(rs.getNString(2)));
-                            group.setModuleIds(new int[]{rs.getInt(3)});
+                            group.setGroupName(rs.getNString(2));
+                            group.setGroupSize(Integer.parseInt(rs.getNString(3)));
+                            group.setMatutino(rs.getBoolean(4));
+                            //group.setModuleIds(new int[]{rs.getInt(3)});
 
                             groups.add(group);
                         }
@@ -357,6 +411,62 @@ public class Dao {
                 else
                     return null;
 
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                connection.closeConnection();
+                if(sp != null)
+                    sp.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<TimesResult> getTimesByGroupNumber(String groupNumber) {
+        connection = new Connection();
+        ArrayList<TimesResult> timesResults = new ArrayList<>();
+        int f = 0;
+        try {
+            if (connection.initConnection() != null) {
+                SQL = "{call getTimeByGroupNumber (?,?)}";
+                sp = connection.conexion.prepareCall(SQL);
+                sp.setEscapeProcessing(true);
+                sp.setQueryTimeout(20);
+                sp.setString(1, groupNumber);
+                sp.registerOutParameter(2, java.sql.Types.NVARCHAR);
+                rs = sp.executeQuery();
+                resultado = sp.getString(2);
+                if(resultado.equals("OK")){
+                    while(rs.next()){
+                        f = f+1;
+                    }
+                    if(f == 0){
+                        System.out.println("Es nulo"+rs);
+                    }
+                    else{
+                        rs.beforeFirst();
+                        System.out.println("No es nulo"+rs);
+                        while(rs.next()) {
+                            TimesResult timesResult = new TimesResult();
+                            timesResult.setClassNumber(rs.getString(1));
+                            timesResult.setClassNumber(rs.getString(2));
+                            timesResult.setClassNumber(rs.getString(3));
+                            timesResult.setClassNumber(rs.getString(4));
+                            timesResult.setClassNumber(rs.getString(5));
+                            timesResult.setClassNumber(rs.getString(6));
+                            timesResult.setClassNumber(rs.getString(7));
+                            timesResult.setClassNumber(rs.getString(8));
+                            timesResults.add(timesResult);
+                        }
+                        return timesResults;
+                    }
+                }
+                else
+                    return null;
             }
         }catch(SQLException e){
             e.printStackTrace();
@@ -496,15 +606,82 @@ public class Dao {
         String result = "";
         try {
             if (connection.initConnection() != null) {
-                SQL = "{call insertGroups (?,?,?)}";
+                SQL = "{call insertGroups (?,?,?,?,?)}";
                 sp = connection.conexion.prepareCall(SQL);
                 sp.setEscapeProcessing(true);
                 sp.setQueryTimeout(20);
-                sp.setInt(1, group.getGroupSize());
-                sp.setInt(2, group.getModuleIds()[0]);
-                sp.registerOutParameter(3, java.sql.Types.VARCHAR);
+                sp.setString(1, group.getGroupName());
+                sp.setInt(2, group.getGroupSize());
+                sp.setBoolean(3, group.isMatutino());
+                sp.setInt(4, group.getModuleIds()[0]);
+                sp.registerOutParameter(5, java.sql.Types.VARCHAR);
                 sp.execute();
-                result = sp.getString(3);
+                result = sp.getString(5);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                connection.closeConnection();
+                if(sp != null)
+                    sp.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    public String insertTimesGroup(TimesResult timeResult) {
+        connection = new Connection();
+        String result = "";
+        try {
+            if (connection.initConnection() != null) {
+                SQL = "{call insertGroups (?,?,?,?,?,?,?,?,?)}";
+                sp = connection.conexion.prepareCall(SQL);
+                sp.setEscapeProcessing(true);
+                sp.setQueryTimeout(20);
+                sp.setString(1, timeResult.getClassNumber());
+                sp.setString(2, timeResult.getGroupNumber());
+                sp.setString(3, timeResult.getModuleName());
+                sp.setString(4, timeResult.getModuleCode());
+                sp.setString(5, timeResult.getRoomCode());
+                sp.setString(6, timeResult.getTeacherName());
+                sp.setString(7, timeResult.getTime());
+                sp.setString(8, timeResult.getDay());
+                sp.registerOutParameter(9, java.sql.Types.VARCHAR);
+                sp.execute();
+                result = sp.getString(9);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                connection.closeConnection();
+                if(sp != null)
+                    sp.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    public String insertGroupsModuleTeacher(int idGroup, int idModule, int idTeacher) {
+        connection = new Connection();
+        String result = "";
+        try {
+            if (connection.initConnection() != null) {
+                SQL = "{call insertGroupsModuleTeacher (?,?,?,?)}";
+                sp = connection.conexion.prepareCall(SQL);
+                sp.setEscapeProcessing(true);
+                sp.setQueryTimeout(20);
+                sp.setInt(1, idGroup);
+                sp.setInt(2, idModule);
+                sp.setInt(3, idTeacher);
+                sp.registerOutParameter(4, java.sql.Types.VARCHAR);
+                sp.execute();
+                result = sp.getString(4);
             }
         }catch(SQLException e){
             e.printStackTrace();

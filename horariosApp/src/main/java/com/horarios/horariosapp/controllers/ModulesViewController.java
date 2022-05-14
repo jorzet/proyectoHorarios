@@ -19,8 +19,8 @@ import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ModulesViewController extends BaseController {
 
@@ -50,6 +50,25 @@ public class ModulesViewController extends BaseController {
 
         ArrayList<Modulo> modules = dao.getAllModules();
         if (modules != null) {
+            Map<String, List<Modulo>> mapModule =
+                    modules.stream().collect(Collectors.groupingBy(w -> w.getModuleCode()));
+
+            Iterator<List<Modulo>> iterator = mapModule.values().iterator();
+            while (iterator.hasNext()) {
+                List<Modulo> sameModules = iterator.next();
+                Modulo module = sameModules.get(0);
+
+                ArrayList<Integer> teachersId = dao.getAllTeachersIdByModuleCode(module.getModuleCode());
+                StringBuilder ids = new StringBuilder();
+                ids.append("{");
+                for (Integer integer : teachersId) {
+                    ids.append(integer).append(", ");
+                }
+                ids.append("}");
+                currentModulesListView.getItems().add("codigo: " + module.getModuleCode() + " nombre: " + module.getModuleName() + " profesores: " + ids);
+            }
+        }
+        /*if (modules != null) {
             for (Modulo module : modules) {
                 ArrayList<Integer> teachersId = dao.getAllTeachersIdByModuleId(module.getModuleId());
                 StringBuilder ids = new StringBuilder();
@@ -60,7 +79,7 @@ public class ModulesViewController extends BaseController {
                 ids.append("}");
                 currentModulesListView.getItems().add("codigo: " + module.getModuleCode() + " nombre: " + module.getModuleName() + " profesores: " + ids);
             }
-        }
+        }*/
     }
 
     public void onBackButtonClick(ActionEvent actionEvent) throws Exception{

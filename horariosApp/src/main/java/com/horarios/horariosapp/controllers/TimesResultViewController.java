@@ -7,10 +7,11 @@ import com.horarios.horariosapp.algorithm.Poblacion;
 import com.horarios.horariosapp.data.*;
 import com.horarios.horariosapp.data.Class;
 import com.horarios.horariosapp.repository.Dao;
-import com.horarios.horariosapp.views.ModuleTreeCell;
+import com.horarios.horariosapp.views.TimeResultListCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,8 +20,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.*;
@@ -34,8 +37,12 @@ public class TimesResultViewController implements Initializable {
     private Label bestSolutionLabel;
     @FXML
     private Label crossLabel;
+    /*@FXML
+    private TreeView<TimesResult> timesResultListView;*/
     @FXML
-    private TreeView<TimesResult> timesResultListView;
+    private ListView timesResultListView;
+
+    private static ObservableList<TimesResult> groupsTimeResult = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -70,18 +77,21 @@ public class TimesResultViewController implements Initializable {
         Class classes[] = timetable.getClasses();
         ObservableList<TimesResult> timesResult = FXCollections.observableArrayList();
         int classIndex = 1;
+        Dao dao = new Dao();
 
         for (Class bestClass : classes) {
             TimesResult timeResult = new TimesResult();
 
-            timeResult.setClassNumber(classIndex);
+            timeResult.setClassNumber(String.valueOf(classIndex));
             timeResult.setModuleName(timetable.getModule(bestClass.getModuleId()).getModuleName());
-            timeResult.setGroupNumber(timetable.getGroup(bestClass.getGroupId()).getGroupId());
+            timeResult.setModuleCode(timetable.getModule(bestClass.getModuleId()).getModuleCode());
+            timeResult.setGroupNumber(String.valueOf(timetable.getGroup(bestClass.getGroupId()).getGroupId()));
             timeResult.setRoomCode(timetable.getRoom(bestClass.getRoomId()).getRoomNumber());
             timeResult.setTeacherName(timetable.getProfessor(bestClass.getProfessorId()).getProfessorName());
             timeResult.setTime(timetable.getTimeslot(bestClass.getTimeslotId()).getTimeslot());
             timeResult.setDay(timetable.getTimeslot(bestClass.getTimeslotId()).getDay());
             timesResult.add(timeResult);
+            //dao.insertTimesGroup(timeResult);
 
             System.out.println("Clase " + timeResult.getClassNumber() + ":");
             System.out.println("Asignatura: " + timeResult.getModuleName());
@@ -96,9 +106,32 @@ public class TimesResultViewController implements Initializable {
         }
 
         Map<String, List<TimesResult>> mapResult =
-                timesResult.stream().collect(Collectors.groupingBy(w -> w.getModuleName()));
+                timesResult.stream().collect(Collectors.groupingBy(TimesResult::getGroupNumber));
 
-        TreeItem<TimesResult> rootNode = new TreeItem<>();
+        Iterator<List<TimesResult>> iterator = mapResult.values().iterator();
+        ObservableList<TimesResult> groupsTimeResult = FXCollections.observableArrayList();
+        while (iterator.hasNext()) {
+            List<TimesResult> timesResults = iterator.next();
+            groupsTimeResult.add(timesResults.get(0));
+        }
+
+        timesResultListView.setItems(groupsTimeResult);
+        timesResultListView.setCellFactory((Callback<ListView<TimesResult>, ListCell<TimesResult>>) param -> new TimeResultListCell());
+        timesResultListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("clicked on " + timesResultListView.getSelectionModel().getSelectedItem());
+                try {
+                    String group = ((TimesResult) timesResultListView.getSelectionModel().getSelectedItem()).getGroupNumber();
+                    groupsTimeResult.addAll(mapResult.get(group));
+
+                    showTimesByGroupView(groupsTimeResult);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        /*TreeItem<TimesResult> rootNode = new TreeItem<>();
         rootNode.setExpanded(true);
 
         Iterator<List<TimesResult>> iterator = mapResult.values().iterator();
@@ -115,7 +148,7 @@ public class TimesResultViewController implements Initializable {
 
         timesResultListView.setRoot(rootNode);
         timesResultListView.setShowRoot(false);
-        timesResultListView.setCellFactory(p -> new ModuleTreeCell());
+        timesResultListView.setCellFactory(p -> new ModuleTreeCell());*/
     }
 
     private EvaHorario getTimesTable() {
@@ -150,7 +183,7 @@ public class TimesResultViewController implements Initializable {
 
         if (modules != null) {
             for (Modulo module : modules) {
-                ArrayList<Integer> teachersId = dao.getAllTeachersIdByModuleId(module.getModuleId());
+                ArrayList<Integer> teachersId = dao.getAllTeachersIdByModuleCode(module.getModuleCode());
                 int[] ids = new int[teachersId.size()];
                 for (int j = 0; j < teachersId.size(); j++) {
                     ids[j] = teachersId.get(j);
@@ -158,7 +191,6 @@ public class TimesResultViewController implements Initializable {
                 timetable.addModule(module.getModuleId(), module.getModuleCode(), module.getModuleName(), ids);
             }
         }
-
 
         ArrayList<Grupo> groups = dao.getAllGroups();
 
@@ -189,5 +221,14 @@ public class TimesResultViewController implements Initializable {
         timesResult1.setModuleName(timesResult.getModuleName());
         timesResult1.setIsTitle(true);
         return timesResult1;
+    }
+
+    private void showTimesByGroupView(ObservableList<TimesResult> groupsTimeResult) {
+        TimesByGroupViewController timesByGroupViewController = new TimesByGroupViewController(groupsTimeResult);
+        timesByGroupViewController.showStage();
+    }
+
+    public ObservableList<TimesResult> getGroupsTimeResult() {
+        return groupsTimeResult;
     }
 }

@@ -45,11 +45,37 @@ BEGIN
 END $$
 
 DELIMITER $$
-CREATE PROCEDURE insertGroups(IN size VARCHAR(45), IN idModule integer, OUT response VARCHAR(100))
+CREATE PROCEDURE insertGroups(IN name VARCHAR(45), IN size VARCHAR(45), IN matutino boolean, OUT response VARCHAR(100))
 BEGIN
-  INSERT INTO mydb.group (size, Module_idModule)
-  VALUES (size, idModule);
-  SET response='Modulo registrado correctamente';
+  INSERT INTO mydb.group (name, size, matutino)
+  VALUES (name, size, matutino);
+  SET response='Grupo registrado correctamente';
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE insertGroupsModuleTeacher(IN idGroup INT, IN idModule INT, IN idTeacher INT, OUT response VARCHAR(100))
+BEGIN
+  INSERT INTO mydb.Group_has_Module (Group_idGroup, Module_idModule, Module_Teacher_idTeacher)
+  VALUES (idGroup, idModule, idTeacher);
+  SET response='Modulo y grupo registrado correctamente';
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE insertTimesGroup(
+IN classNumber VARCHAR(45), 
+IN groupNumber VARCHAR(45), 
+IN moduleName VARCHAR(45), 
+IN moduleCode VARCHAR(45), 
+IN roomCode VARCHAR(45), 
+IN teacherName VARCHAR(45), 
+IN time VARCHAR(45), 
+IN day VARCHAR(45), 
+
+OUT response VARCHAR(100))
+BEGIN
+  INSERT INTO mydb.TimesGroup (classNumber, groupNumber, moduleName, moduleCode, roomCode, teacherName, time, day)
+  VALUES (classNumber, groupNumber, moduleName, moduleCode, roomCode, teacherName, time, day);
+  SET response='Horario registrado correctamente';
 END $$
 
 /* CREACION DE PRODEDIMIENTOS ALMACENADOS PARA ELIMINAR*/
@@ -143,13 +169,25 @@ BEGIN
 	END IF;
 END $$
 
+DELIMITER $$
+CREATE PROCEDURE getAllModulesAndGroups(OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT g.idGroup FROM mydb.Group_has_Module as g)
+	THEN
+		SELECT * FROM mydb.Group_has_Module;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No hay grupos en la BD';
+	END IF;
+END $$
+
 
 DELIMITER $$
 CREATE PROCEDURE getAllModuleIdbyGroupId(IN groupId int, OUT response VARCHAR(100))
 BEGIN
-	IF EXISTS (SELECT m.idModule FROM mydb.group as g JOIN mydb.module as m WHERE g.Module_idModule=m.idModule and g.idGroup=groupId)
+	IF EXISTS (SELECT m.idModule FROM mydb.module as m JOIN mydb.Group_has_Module as ghm WHERE ghm.Module_idModule=m.idModule and ghm.Group_idGroup=groupId)
 	THEN
-		SELECT m.idModule FROM mydb.group as g JOIN mydb.module as m WHERE g.Module_idModule=m.idModule and g.idGroup=groupId;
+		SELECT m.idModule FROM mydb.module as m JOIN mydb.Group_has_Module as ghm WHERE ghm.Module_idModule=m.idModule AND ghm.Module_Teacher_idTeacher=m.Teacher_idTeacher AND ghm.Group_idGroup=groupId;
 		SET response = 'OK';
 	ELSE
 		SET response = 'No hay grupos relacionados al moduleId en la BD';
@@ -157,14 +195,26 @@ BEGIN
 END $$
 
 DELIMITER $$
-CREATE PROCEDURE getAllTeachersIdByModuleId(IN moduleId int, OUT response VARCHAR(100))
+CREATE PROCEDURE getAllTeachersIdByModuleCode(IN moduleCode VARCHAR(45), OUT response VARCHAR(100))
 BEGIN
-	IF EXISTS (SELECT t.idTeacher FROM mydb.module as m JOIN mydb.teacher as t WHERE m.Teacher_idTeacher=t.idTeacher AND m.idModule=moduleId)
+	IF EXISTS (SELECT t.idTeacher FROM mydb.module as m JOIN mydb.teacher as t WHERE m.Teacher_idTeacher=t.idTeacher AND m.moduleCode=moduleCode)
 	THEN
-		SELECT t.idTeacher FROM mydb.module as m JOIN mydb.teacher as t WHERE m.Teacher_idTeacher=t.idTeacher AND m.idModule=moduleId;
+		SELECT t.idTeacher FROM mydb.module as m JOIN mydb.teacher as t WHERE m.Teacher_idTeacher=t.idTeacher AND m.moduleCode=moduleCode;
 		SET response = 'OK';
 	ELSE
 		SET response = 'No hay grupos relacionados al moduleId en la BD';
+	END IF;
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE getTimeByGroupNumber(IN groupNumber VARCHAR(45), OUT response VARCHAR(100))
+BEGIN
+	IF EXISTS (SELECT tg.idTimesGroup FROM mydb.TimesGroup as tg WHERE tg.groupNumber=groupNumber)
+	THEN
+		SELECT tg.classNumber, tg.groupNumber, tg.moduleName, tg.moduleCode, tg.roomCode, tg.teacherName, tg.time, tg.day FROM mydb.TimesGroup as tg WHERE tg.groupNumber=groupNumber;
+		SET response = 'OK';
+	ELSE
+		SET response = 'No hay horarios relacionados al moduleId en la BD';
 	END IF;
 END $$
 
@@ -172,8 +222,8 @@ END $$
 
 
 /* ELIMINAR PROCEDIMIENTOS ALMACENADOS*/
-DROP PROCEDURE insertGroups;
-DROP PROCEDURE insertTimes;
+##DROP PROCEDURE insertGroups;
+##DROP PROCEDURE insertTimes;
 
 /*LLAMAR PRODECIMIENTOS ALMACENADOS*/
 

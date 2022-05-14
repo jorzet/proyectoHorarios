@@ -61,6 +61,6 @@
         </Button>
     </HBox>
 
-    <ListView fx:id="currentModulesListView" prefHeight="200.0" prefWidth="200.0" />
+    <ListView fx:id="currentModulesListView" prefHeight="400.0" prefWidth="200.0" />
 
 </VBox>

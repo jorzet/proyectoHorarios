@@ -63,6 +63,6 @@
         </Button>
     </HBox>
 
-   <ListView fx:id="currentTimesListView" prefHeight="200.0" prefWidth="200.0" />
+   <ListView fx:id="currentTimesListView" prefHeight="400.0" prefWidth="200.0" />
 
 </VBox>

@@ -46,7 +46,7 @@ public class RoomsViewController extends BaseController {
         }
     }
 
-    public void onBackButtonClick(ActionEvent actionEvent) throws Exception{
+    public void onBackButtonClick(ActionEvent actionEvent) throws Exception {
         Parent window3 = FXMLLoader.load(Objects.requireNonNull(Application.class.getResource("times_creator_view.fxml")));
         Scene newScene = new Scene(window3);
         Stage mainWindow = (Stage)  ((Node)actionEvent.getSource()).getScene().getWindow();

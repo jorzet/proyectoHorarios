@@ -27,6 +27,8 @@ public class GroupsViewController extends BaseController {
     @FXML
     private TextField capacityTextField;
     @FXML
+    private TextField groupNameTextField;
+    @FXML
     private CheckComboBox modulesComboBox;
     @FXML
     private ListView currentGroupsListView;
@@ -72,8 +74,9 @@ public class GroupsViewController extends BaseController {
 
     public void onAddGroupButtonClick(ActionEvent actionEvent) {
         String capacityText = capacityTextField.getText();
+        String groupName = groupNameTextField.getText();
 
-        if (!capacityText.isEmpty() && modulesComboBox.getCheckModel().getItemCount() > 0) {
+        if (!groupName.isEmpty() && !capacityText.isEmpty() && modulesComboBox.getCheckModel().getItemCount() > 0) {
             if (isNumeric(capacityText)) {
                 currentGroupsListView.getItems().add("capacidad: " + capacityTextField.getText() + " modulos: " + modulesComboBox.getCheckModel().getCheckedIndices());
 
@@ -84,6 +87,7 @@ public class GroupsViewController extends BaseController {
                         Modulo module = modules.get(modulesComboBox.getCheckModel().getCheckedIndices().indexOf(i));
 
                         Grupo grupo = new Grupo();
+                        grupo.setGroupName(groupNameTextField.getText());
                         grupo.setGroupSize(Integer.parseInt(capacityTextField.getText()));
                         grupo.setModuleIds(new int[]{module.getModuleId()});
 

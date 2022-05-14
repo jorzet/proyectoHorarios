@@ -30,12 +30,12 @@ public class TimeResultListCell extends ListCell<TimesResult> {
     protected void updateItem(TimesResult timeResult, boolean empty) {
         super.updateItem(timeResult, empty);
         if (timeResult != null && !empty) { // <== test for null item and empty parameter
-            classNumber.setText("Clase " + timeResult.getClassNumber() + ":");
-            moduleName.setText("Asignatura: " + timeResult.getModuleName());
+            //classNumber.setText("Clase " + timeResult.getClassNumber() + ":");
+            //moduleName.setText("Asignatura: " + timeResult.getModuleName());
             groupNumber.setText("Grupo: " + timeResult.getGroupNumber());
-            roomCode.setText("Aula: " + timeResult.getRoomCode());
-            teacherName.setText("Profesor: " + timeResult.getTeacherName());
-            timesLot.setText("Horario: " + timeResult.getTime());
+            //roomCode.setText("Aula: " + timeResult.getRoomCode());
+            //teacherName.setText("Profesor: " + timeResult.getTeacherName());
+            //timesLot.setText("Horario: " + timeResult.getTime());
             setGraphic(content);
         } else {
             setGraphic(null);

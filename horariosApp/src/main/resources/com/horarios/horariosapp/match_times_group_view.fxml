@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.CheckComboBox?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.text.Font?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.horarios.horariosapp.controllers.TeachersViewController"
-      prefHeight="400.0"
-      prefWidth="600.0"
-      spacing="20.0">
+      fx:controller="com.horarios.horariosapp.controllers.MatchTimesGroupViewController"
+      prefHeight="400.0" prefWidth="600.0">
 
     <!-- PADDING -->
     <padding>
@@ -24,7 +24,7 @@
 
     <!-- HEADER -->
     <HBox>
-        <Button style="-fx-background-color: transparent;" onAction="#onBackButtonClick">
+        <Button onAction="#onBackButtonClick" style="-fx-background-color: transparent;">
             <graphic>
                 <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                     <image>
@@ -34,7 +34,7 @@
             </graphic>
         </Button>
         <Region HBox.hgrow="ALWAYS" />
-        <Label alignment="CENTER" text="Añadir Profesores">
+        <Label alignment="CENTER" text="Añadir grupo">
             <font>
                 <Font name="System Bold" size="20.0" />
             </font>
@@ -44,14 +44,12 @@
 
     <!-- CONTENT -->
     <HBox>
-        <TextField fx:id="teacherNameTextField" promptText="Nombre(s)"/>
+        <CheckComboBox fx:id="modulesComboBox" prefWidth="120" title="Modulo"/>
         <Region HBox.hgrow="ALWAYS" />
-        <TextField fx:id="teacherFirstLastNameTextField" promptText="Apellido paterno"/>
-        <Region HBox.hgrow="ALWAYS" />
-        <TextField fx:id="teacherSecondLastNameTextField" promptText="Apellido materno"/>
+        <CheckComboBox fx:id="groupsComboBox" prefWidth="120" title="Grupo"/>
         <Region HBox.hgrow="ALWAYS" />
 
-        <Button onAction="#onAddTeacherButtonClick" style="-fx-background-color: transparent;">
+        <Button onAction="#onAddGroupButtonClick" style="-fx-background-color: transparent;">
             <graphic>
                 <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                     <image>
@@ -62,5 +60,6 @@
         </Button>
     </HBox>
 
-    <ListView fx:id="currentTeacherListView" prefHeight="400.0" prefWidth="200.0" />
+    <ListView fx:id="groupsModulesResultListView" prefHeight="400.0" prefWidth="200.0" />
+
 </VBox>

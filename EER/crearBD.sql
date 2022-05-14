@@ -55,12 +55,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Module` (
   `idModule` INT NOT NULL AUTO_INCREMENT,
-  `moduleCode` VARCHAR(100) NULL,
-  `moduleName` VARCHAR(200) NULL,
+  `moduleCode` VARCHAR(45) NULL,
+  `moduleName` VARCHAR(100) NULL,
   `Teacher_idTeacher` INT NOT NULL,
   PRIMARY KEY (`idModule`, `Teacher_idTeacher`),
-  INDEX `fk_Module_Teacher1_idx` (`Teacher_idTeacher` ASC) VISIBLE,
-  CONSTRAINT `fk_Module_Teacher1`
+  INDEX `fk_Module_Teacher_idx` (`Teacher_idTeacher` ASC) VISIBLE,
+  CONSTRAINT `fk_Module_Teacher`
     FOREIGN KEY (`Teacher_idTeacher`)
     REFERENCES `mydb`.`Teacher` (`idTeacher`)
     ON DELETE NO ACTION
@@ -73,17 +73,50 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Group` (
   `idGroup` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
   `size` VARCHAR(45) NULL,
+  `matutino` BOOLEAN NULL,
+  PRIMARY KEY (`idGroup`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Group_has_Module`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Group_has_Module` (
+  `Group_idGroup` INT NOT NULL,
   `Module_idModule` INT NOT NULL,
-  PRIMARY KEY (`idGroup`, `Module_idModule`),
-  INDEX `fk_Group_Module_idx` (`Module_idModule` ASC) VISIBLE,
-  CONSTRAINT `fk_Group_Module`
-    FOREIGN KEY (`Module_idModule`)
-    REFERENCES `mydb`.`Module` (`idModule`)
+  `Module_Teacher_idTeacher` INT NOT NULL,
+  PRIMARY KEY (`Group_idGroup`, `Module_idModule`, `Module_Teacher_idTeacher`),
+  INDEX `fk_Group_has_Module_Module1_idx` (`Module_idModule` ASC, `Module_Teacher_idTeacher` ASC) VISIBLE,
+  INDEX `fk_Group_has_Module_Group1_idx` (`Group_idGroup` ASC) VISIBLE,
+  CONSTRAINT `fk_Group_has_Module_Group1`
+    FOREIGN KEY (`Group_idGroup`)
+    REFERENCES `mydb`.`Group` (`idGroup`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Group_has_Module_Module1`
+    FOREIGN KEY (`Module_idModule` , `Module_Teacher_idTeacher`)
+    REFERENCES `mydb`.`Module` (`idModule` , `Teacher_idTeacher`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `mydb`.`TimesGroup`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`TimesGroup` (
+  `idTimesGroup` INT NOT NULL AUTO_INCREMENT,
+  `classNumber` VARCHAR(45) NULL,
+  `groupNumber` VARCHAR(45) NULL,
+  `moduleName` VARCHAR(45) NULL,
+  `moduleCode` VARCHAR(45) NULL,
+  `roomCode` VARCHAR(45) NULL,
+  `teacherName` VARCHAR(45) NULL,
+  `time` VARCHAR(45) NULL,
+  `day` VARCHAR(45) NULL,
+  PRIMARY KEY (`idTimesGroup`))
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

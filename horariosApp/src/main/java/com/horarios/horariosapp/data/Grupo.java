@@ -2,7 +2,9 @@ package com.horarios.horariosapp.data;
 
 public class Grupo {
     private  int groupId;
+    private String groupName;
     private  int groupSize;
+    private boolean matutino;
     private  int[] moduleIds;
 
     public Grupo() {}
@@ -32,5 +34,21 @@ public class Grupo {
     }
     public int[] getModuleIds() {
         return this.moduleIds;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setMatutino(boolean matutino) {
+        this.matutino = matutino;
+    }
+
+    public boolean isMatutino() {
+        return matutino;
     }
 }

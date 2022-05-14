@@ -29,6 +29,8 @@ public class Controller extends BaseController {
     private Label totalModulesText;
     @FXML
     private Label totalGoupsText;
+    @FXML
+    private Label totalModulesGroupsText;
 
     private boolean hasDataStorage = false;
 
@@ -39,18 +41,21 @@ public class Controller extends BaseController {
         ArrayList<Profesor> teachers = dao.getAllTeachers();
         ArrayList<Modulo> modules = dao.getAllModules();
         ArrayList<Grupo> groups = dao.getAllGroups();
+        ArrayList<GroupModule> groupModules = dao.getAllModulesAndGroups();
 
         if (rooms != null) totalRoomsText.setText(String.valueOf(rooms.size()));
         if (times != null) totalTimesText.setText(String.valueOf(times.size()));
         if (teachers != null) totalTeachersText.setText(String.valueOf(teachers.size()));
         if (modules != null) totalModulesText.setText(String.valueOf(modules.size()));
         if (groups != null) totalGoupsText.setText(String.valueOf(groups.size()));
+        if (groupModules != null) totalModulesGroupsText.setText(String.valueOf(groupModules.size()));
 
         if (groups != null && !groups.isEmpty() &&
                 modules != null && !modules.isEmpty() &&
                 teachers != null && !teachers.isEmpty() &&
                 times != null &&!times.isEmpty() &&
-                rooms != null && !rooms.isEmpty()) {
+                rooms != null && !rooms.isEmpty() &&
+                groupModules != null && !groupModules.isEmpty()) {
             hasDataStorage = true;
         }
     }
@@ -73,6 +78,10 @@ public class Controller extends BaseController {
 
     public void onEditGroupsButtonClick(ActionEvent actionEvent) throws Exception {
         handleOnCLick(actionEvent, "groups_view.fxml");
+    }
+
+    public void onEditModulesGroupsButtonClick(ActionEvent actionEvent) throws Exception{
+        handleOnCLick(actionEvent, "match_times_group_view.fxml");
     }
 
     public void onCreateTimesButtonClick(ActionEvent actionEvent) throws Exception {
