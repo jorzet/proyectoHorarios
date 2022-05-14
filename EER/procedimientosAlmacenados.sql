@@ -172,7 +172,7 @@ END $$
 DELIMITER $$
 CREATE PROCEDURE getAllModulesAndGroups(OUT response VARCHAR(100))
 BEGIN
-	IF EXISTS (SELECT g.idGroup FROM mydb.Group_has_Module as g)
+	IF EXISTS (SELECT g.Group_idGroup FROM mydb.Group_has_Module as g)
 	THEN
 		SELECT * FROM mydb.Group_has_Module;
 		SET response = 'OK';
