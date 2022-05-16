@@ -89,7 +89,7 @@ public class TimesResultViewController implements Initializable {
             timeResult.setTime(timetable.getTimeslot(bestClass.getTimeslotId()).getTimeslot());
             timeResult.setDay(timetable.getTimeslot(bestClass.getTimeslotId()).getDay());
             timesResult.add(timeResult);
-            //dao.insertTimesGroup(timeResult);
+            dao.insertTimesGroup(timeResult);
 
             System.out.println("Clase " + timeResult.getClassNumber() + ":");
             System.out.println("Asignatura: " + timeResult.getModuleName());

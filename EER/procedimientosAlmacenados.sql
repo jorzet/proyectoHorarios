@@ -64,7 +64,7 @@ DELIMITER $$
 CREATE PROCEDURE insertTimesGroup(
 IN classNumber VARCHAR(45), 
 IN groupNumber VARCHAR(45), 
-IN moduleName VARCHAR(45), 
+IN moduleName VARCHAR(100), 
 IN moduleCode VARCHAR(45), 
 IN roomCode VARCHAR(45), 
 IN teacherName VARCHAR(45), 

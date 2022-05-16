@@ -636,7 +636,7 @@ public class Dao {
         String result = "";
         try {
             if (connection.initConnection() != null) {
-                SQL = "{call insertGroups (?,?,?,?,?,?,?,?,?)}";
+                SQL = "{call insertTimesGroup (?,?,?,?,?,?,?,?,?)}";
                 sp = connection.conexion.prepareCall(SQL);
                 sp.setEscapeProcessing(true);
                 sp.setQueryTimeout(20);

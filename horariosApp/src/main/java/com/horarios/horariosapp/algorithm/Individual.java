@@ -15,7 +15,7 @@ public class Individual {
         int numClasses = timetable.getNumClasses();
         int chromosomeLength = numClasses * 3;
         int newChromosome[] = new int[chromosomeLength];
-        ArrayList<Horario> times = new Dao().getAllTimes();
+        //ArrayList<Horario> times = new Dao().getAllTimes();
         int chromosomeIndex = 0;
         for (Grupo group : timetable.getGroupsAsArray()) {
             for (int moduleId : group.getModuleIds()) {
