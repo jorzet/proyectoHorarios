@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -29,11 +30,16 @@ public class GroupsViewController extends BaseController {
     @FXML
     private TextField groupNameTextField;
     @FXML
-    private CheckComboBox modulesComboBox;
+    private ComboBox modulesComboBox;
+    @FXML
+    private ComboBox matutinoComboBox;
     @FXML
     private ListView currentGroupsListView;
 
     private ArrayList<Modulo> modules;
+
+    ObservableList<String> observableMatutino = FXCollections.observableArrayList("Matutino", "Vespertino");
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -47,19 +53,23 @@ public class GroupsViewController extends BaseController {
             }
         }
         modulesComboBox.getItems().addAll(observableModules);
+        matutinoComboBox.getItems().addAll(observableMatutino);
 
         ArrayList<Grupo> groups = dao.getAllGroups();
         if (groups != null) {
             for (int i = 0; i < modules.size(); i++) {
                 Grupo group = groups.get(i);
                 ArrayList<Integer> modulesId = dao.getAllModulesByGroupId(group.getGroupId());
-                StringBuffer ids = new StringBuffer();
-                ids.append("{");
-                for (Integer integer : modulesId) {
-                    ids.append(integer).append(", ");
+                if (modulesId != null) {
+                    StringBuffer ids = new StringBuffer();
+                    ids.append("{");
+                    for (Integer integer : modulesId) {
+                        ids.append(integer).append(", ");
+                    }
+                    ids.append("}");
+                    String turno = group.isMatutino() ? "Matutino" : "Vespertino";
+                    currentGroupsListView.getItems().add("capacidad: " + group.getGroupSize() + " Turno: " + turno + " modulos: " + ids);
                 }
-                ids.append("}");
-                currentGroupsListView.getItems().add("capacidad: " + group.getGroupSize() + " modulos: " + ids);
             }
         }
     }
@@ -76,25 +86,33 @@ public class GroupsViewController extends BaseController {
         String capacityText = capacityTextField.getText();
         String groupName = groupNameTextField.getText();
 
-        if (!groupName.isEmpty() && !capacityText.isEmpty() && modulesComboBox.getCheckModel().getItemCount() > 0) {
+        if (!groupName.isEmpty() && !capacityText.isEmpty() &&
+                modulesComboBox.getSelectionModel().getSelectedItem() != null &&
+                matutinoComboBox.getSelectionModel().getSelectedItem() != null) {
             if (isNumeric(capacityText)) {
-                currentGroupsListView.getItems().add("capacidad: " + capacityTextField.getText() + " modulos: " + modulesComboBox.getCheckModel().getCheckedIndices());
+                currentGroupsListView.getItems().add("capacidad: " + capacityTextField.getText() + " Turno: " + modulesComboBox.getSelectionModel().getSelectedItem() + " modulos: " + modulesComboBox.getSelectionModel().getSelectedIndex());
 
                 Dao dao = new Dao();
 
                 if (modules != null) {
-                    for (int i = 0; i < modulesComboBox.getCheckModel().getCheckedIndices().size(); i++) {
-                        Modulo module = modules.get(modulesComboBox.getCheckModel().getCheckedIndices().indexOf(i));
+                    int moduleIndex = modulesComboBox.getSelectionModel().getSelectedIndex();
+                    Modulo module = modules.get(moduleIndex);
+                    boolean matutino = modulesComboBox.getSelectionModel().getSelectedItem().equals("Matutino");
+                    Grupo grupo = new Grupo();
+                    grupo.setGroupName(groupNameTextField.getText());
+                    grupo.setGroupSize(Integer.parseInt(capacityTextField.getText()));
+                    grupo.setMatutino(matutino);
+                    grupo.setModuleIds(new int[]{module.getModuleId()});
 
-                        Grupo grupo = new Grupo();
-                        grupo.setGroupName(groupNameTextField.getText());
-                        grupo.setGroupSize(Integer.parseInt(capacityTextField.getText()));
-                        grupo.setModuleIds(new int[]{module.getModuleId()});
+                    String result = dao.insertGroup(grupo);
 
-                        String result = dao.insertGroup(grupo);
+                    modulesComboBox.getSelectionModel().clearSelection();
+                    matutinoComboBox.getSelectionModel().clearSelection();
+                    capacityTextField.setText("");
+                    groupNameTextField.setText("");
 
-                        System.out.println(result);
-                    }
+                    System.out.println(result);
+
                 }
 
                 capacityTextField.setText("");

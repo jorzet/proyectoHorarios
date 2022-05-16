@@ -247,3 +247,6 @@ select @response;
 CALL getAllTeachersIdByModuleId(1, @response);
 select @response
 
+CALL getAllModuleIdbyGroupId(1, @response);
+select @response
+

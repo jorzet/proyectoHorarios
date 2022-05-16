@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 public class ModulesViewController extends BaseController {
 
     @FXML
-    private CheckComboBox teacherComboBox;
+    private ComboBox teacherComboBox;
     @FXML
     private TextField moduleCodeTextField;
     @FXML
@@ -97,27 +98,24 @@ public class ModulesViewController extends BaseController {
 
     public void onAddModuleButtonClick(ActionEvent actionEvent) {
         if (!moduleCodeTextField.getText().isEmpty() && !moduleNameTextField.getText().isEmpty()
-                && teacherComboBox.getCheckModel().getItemCount() > 0) {
+                && teacherComboBox.getSelectionModel().getSelectedItem() != null) {
 
-            currentModulesListView.getItems().add("codigo: " + moduleCodeTextField.getText() + " nombre: " + moduleNameTextField.getText() + " profesores: " + teacherComboBox.getCheckModel().getCheckedIndices());
-
-            Dao dao = new Dao();
-
+            currentModulesListView.getItems().add("codigo: " + moduleCodeTextField.getText() + " nombre: " + moduleNameTextField.getText() + " profesores: " + teacherComboBox.getSelectionModel().getSelectedIndex());
 
             if (teachers != null) {
-                for (int i = 0; i < teacherComboBox.getCheckModel().getCheckedIndices().size(); i++) {
-                    Profesor teacher = teachers.get(teacherComboBox.getCheckModel().getCheckedIndices().indexOf(i));
-                    Modulo module = new Modulo();
-                    module.setModuleCode(moduleCodeTextField.getText());
-                    module.setModule(moduleNameTextField.getText());
-                    module.setProfessorIds(new int[]{teacher.getProfessorId()});
-                    String result = dao.insertModule(module);
-                    System.out.println(result);
-                }
+                int index = teacherComboBox.getSelectionModel().getSelectedIndex();
+                Profesor teacher = teachers.get(index);
+                Modulo module = new Modulo();
+                module.setModuleCode(moduleCodeTextField.getText());
+                module.setModule(moduleNameTextField.getText());
+                module.setProfessorIds(new int[]{teacher.getProfessorId()});
+                String result = dao.insertModule(module);
+                System.out.println(result);
             }
 
             moduleCodeTextField.setText("");
             moduleNameTextField.setText("");
+            teacherComboBox.getSelectionModel().clearSelection();
 
             Stage mainWindow = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             mainWindow.show();

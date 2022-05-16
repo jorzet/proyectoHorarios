@@ -606,17 +606,16 @@ public class Dao {
         String result = "";
         try {
             if (connection.initConnection() != null) {
-                SQL = "{call insertGroups (?,?,?,?,?)}";
+                SQL = "{call insertGroups (?,?,?,?)}";
                 sp = connection.conexion.prepareCall(SQL);
                 sp.setEscapeProcessing(true);
                 sp.setQueryTimeout(20);
                 sp.setString(1, group.getGroupName());
                 sp.setInt(2, group.getGroupSize());
                 sp.setBoolean(3, group.isMatutino());
-                sp.setInt(4, group.getModuleIds()[0]);
-                sp.registerOutParameter(5, java.sql.Types.VARCHAR);
+                sp.registerOutParameter(4, java.sql.Types.VARCHAR);
                 sp.execute();
-                result = sp.getString(5);
+                result = sp.getString(4);
             }
         }catch(SQLException e){
             e.printStackTrace();

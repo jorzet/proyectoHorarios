@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -21,8 +22,10 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TimesByGroupViewController extends BaseController {
 
@@ -70,6 +73,16 @@ public class TimesByGroupViewController extends BaseController {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         ObservableList<TimesResult> results = groupsTimeResult;
+        Collections.sort(results, new Comparator<TimesResult>() {
+            @Override
+            public int compare(TimesResult tr1, TimesResult tr2) {
+                String[] str1 = tr1.getTime().split("-")[1].replace(" ", "").split(":");
+                String[] str2 = tr2.getTime().split("-")[1].replace(" ", "").split(":");
+                double time1 = Double.parseDouble(str1[0]) + Double.parseDouble(str1[1])/60;
+                double time2 = Double.parseDouble(str2[0]) + Double.parseDouble(str2[1])/60;
+                return (time1<time2 ? -1 : (time1==time2 ? 0 : 1));
+            }
+        });
         ObservableList<Result> groupsTimeResult_ = FXCollections.observableArrayList();;
         if (results != null) {
             for (TimesResult timeResult : results) {
@@ -94,11 +107,22 @@ public class TimesByGroupViewController extends BaseController {
             times.setCellFactory((Callback<TableColumn<Result, SimpleStringProperty>, TableCell<Result, SimpleStringProperty>>)
                     timesResultStringTableColumn ->
                             new TableCell<>() {
+
                                 @Override
                                 protected void updateItem(SimpleStringProperty item, boolean empty) {
                                     super.updateItem(item, empty);
                                     if (!empty && item != null) {
-                                        setText(item.get());
+                                        String time = item.get();
+                                        setText(time);
+                                        TableRow<Result> currentRow = getTableRow();
+                                        String[] str1 = time.split("-")[0].replace(" ", "").split(":");
+                                        double doubleTime = Double.parseDouble(str1[0]) + Double.parseDouble(str1[1])/60;
+
+                                        if(doubleTime > 14)
+                                            currentRow.setStyle("-fx-background-color:lightcoral");
+                                        else
+                                            currentRow.setStyle("-fx-background-color:lightgreen");
+
                                     } else {
                                         setText(null);
                                     }
@@ -212,11 +236,9 @@ public class TimesByGroupViewController extends BaseController {
     }
 
     public void onBackButtonClick(ActionEvent actionEvent) throws Exception {
-        Parent window3 = FXMLLoader.load(Objects.requireNonNull(Application.class.getResource("times_result_view.fxml")));
-        Scene newScene = new Scene(window3);
-        Stage mainWindow = (Stage)  ((Node)actionEvent.getSource()).getScene().getWindow();
-
-        mainWindow.setScene(newScene);
+        final Node source = (Node) actionEvent.getSource();
+        final Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
     public static class Result {
@@ -238,7 +260,7 @@ public class TimesByGroupViewController extends BaseController {
             this.roomCode = new SimpleStringProperty(roomCode);
             this.teacherName = new SimpleStringProperty(teacherName);
             this.time = new SimpleStringProperty(time);
-            this.day = new SimpleStringProperty(day + "\n" + teacherName + "\n"+moduleName);
+            this.day = new SimpleStringProperty(day + "\n" + teacherName + "\n"+moduleName + "\n" + roomCode);
         }
 
         public SimpleStringProperty  getClassNumber() {

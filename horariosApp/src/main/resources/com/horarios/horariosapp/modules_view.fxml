@@ -47,7 +47,7 @@
         <Region HBox.hgrow="ALWAYS" />
         <TextField fx:id="moduleNameTextField" prefWidth="150" promptText="Nombre"/>
         <Region HBox.hgrow="ALWAYS" />
-        <CheckComboBox fx:id="teacherComboBox" prefWidth="150" title="Profesores"/>
+        <ComboBox fx:id="teacherComboBox" prefWidth="150"  promptText="Profesores"/>
         <Region HBox.hgrow="ALWAYS" />
 
         <Button onAction="#onAddModuleButtonClick" style="-fx-background-color: transparent;">

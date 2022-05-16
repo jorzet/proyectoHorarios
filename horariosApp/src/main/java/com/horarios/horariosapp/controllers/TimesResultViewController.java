@@ -15,13 +15,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -115,6 +113,15 @@ public class TimesResultViewController implements Initializable {
             groupsTimeResult.add(timesResults.get(0));
         }
 
+        Collections.sort(groupsTimeResult, new Comparator<TimesResult>() {
+            @Override
+            public int compare(TimesResult tr1, TimesResult tr2) {
+                double time1 = Integer.parseInt(tr1.getGroupNumber());
+                double time2 = Integer.parseInt(tr2.getGroupNumber());
+                return (time1<time2 ? -1 : (time1==time2 ? 0 : 1));
+            }
+        });
+
         timesResultListView.setItems(groupsTimeResult);
         timesResultListView.setCellFactory((Callback<ListView<TimesResult>, ListCell<TimesResult>>) param -> new TimeResultListCell());
         timesResultListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -123,9 +130,10 @@ public class TimesResultViewController implements Initializable {
                 System.out.println("clicked on " + timesResultListView.getSelectionModel().getSelectedItem());
                 try {
                     String group = ((TimesResult) timesResultListView.getSelectionModel().getSelectedItem()).getGroupNumber();
-                    groupsTimeResult.addAll(mapResult.get(group));
+                    ObservableList<TimesResult> groupTimeResult =
+                            FXCollections.observableArrayList(mapResult.get(group));
 
-                    showTimesByGroupView(groupsTimeResult);
+                    showTimesByGroupView(groupTimeResult);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -184,11 +192,13 @@ public class TimesResultViewController implements Initializable {
         if (modules != null) {
             for (Modulo module : modules) {
                 ArrayList<Integer> teachersId = dao.getAllTeachersIdByModuleCode(module.getModuleCode());
-                int[] ids = new int[teachersId.size()];
-                for (int j = 0; j < teachersId.size(); j++) {
-                    ids[j] = teachersId.get(j);
+                if (teachersId != null) {
+                    int[] ids = new int[teachersId.size()];
+                    for (int j = 0; j < teachersId.size(); j++) {
+                        ids[j] = teachersId.get(j);
+                    }
+                    timetable.addModule(module.getModuleId(), module.getModuleCode(), module.getModuleName(), ids);
                 }
-                timetable.addModule(module.getModuleId(), module.getModuleCode(), module.getModuleName(), ids);
             }
         }
 
@@ -197,11 +207,13 @@ public class TimesResultViewController implements Initializable {
         if (groups != null) {
             for (Grupo group : groups) {
                 ArrayList<Integer> modulesId = dao.getAllModulesByGroupId(group.getGroupId());
-                int[] ids = new int[modulesId.size()];
-                for (int j = 0; j < modulesId.size(); j++) {
-                    ids[j] = modulesId.get(j);
+                if (modulesId != null) {
+                    int[] ids = new int[modulesId.size()];
+                    for (int j = 0; j < modulesId.size(); j++) {
+                        ids[j] = modulesId.get(j);
+                    }
+                    timetable.addGroup(group.getGroupId(), group.getGroupSize(), ids);
                 }
-                timetable.addGroup(group.getGroupId(), group.getGroupSize(), ids);
             }
         }
 

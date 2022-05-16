@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
@@ -26,9 +27,9 @@ import java.util.ResourceBundle;
 public class MatchTimesGroupViewController extends BaseController {
 
     @FXML
-    private CheckComboBox modulesComboBox;
+    private ComboBox modulesComboBox;
     @FXML
-    private CheckComboBox groupsComboBox;
+    private ComboBox groupsComboBox;
     @FXML
     private ListView groupsModulesResultListView;
 
@@ -82,17 +83,12 @@ public class MatchTimesGroupViewController extends BaseController {
     }
 
     public void onAddGroupButtonClick(ActionEvent actionEvent) {
-        if (groupsComboBox.getCheckModel().getItemCount() > 0 && modulesComboBox.getCheckModel().getItemCount() > 0) {
+        if (groupsComboBox.getSelectionModel().getSelectedItem() != null
+                && modulesComboBox.getSelectionModel().getSelectedItem() != null) {
             if (modules != null && groups != null) {
-                Modulo module = new Modulo();
-                Grupo grupo = new Grupo();
-                for (int i = 0; i < modulesComboBox.getCheckModel().getCheckedIndices().size(); i++) {
-                    module = modules.get(modulesComboBox.getCheckModel().getCheckedIndices().indexOf(i));
-                }
+                Modulo module = modules.get(modulesComboBox.getSelectionModel().getSelectedIndex());
+                Grupo grupo = groups.get(groupsComboBox.getSelectionModel().getSelectedIndex());
 
-                for (int i = 0; i < groupsComboBox.getCheckModel().getCheckedIndices().size(); i++) {
-                    grupo = groups.get(groupsComboBox.getCheckModel().getCheckedIndices().indexOf(i));
-                }
                 if (module != null && groups != null) {
                     int idTeacher = module.getRandomProfessorId();
                     dao.insertGroupsModuleTeacher(grupo.getGroupId(), module.getModuleId(), idTeacher);
@@ -105,6 +101,9 @@ public class MatchTimesGroupViewController extends BaseController {
                     ids.append(idTeacher);
                     ids.append("}");
                     groupsModulesResultListView.getItems().add("vinculo: "+ids);
+
+                    modulesComboBox.getSelectionModel().clearSelection();
+                    groupsComboBox.getSelectionModel().clearSelection();
                 }
             } else {
                 showErrorAlertDialog("Error");

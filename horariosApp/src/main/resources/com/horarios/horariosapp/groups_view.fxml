@@ -46,7 +46,9 @@
         <Region HBox.hgrow="ALWAYS" />
         <TextField fx:id="capacityTextField" promptText="Capacidad" prefWidth="120" />
         <Region HBox.hgrow="ALWAYS" />
-        <CheckComboBox fx:id="modulesComboBox" prefWidth="120" title="Modulo"/>
+        <ComboBox fx:id="matutinoComboBox" prefWidth="120" promptText="Turno"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <ComboBox fx:id="modulesComboBox" prefWidth="120" promptText="Modulo"/>
         <Region HBox.hgrow="ALWAYS" />
 
         <Button onAction="#onAddGroupButtonClick" style="-fx-background-color: transparent;">

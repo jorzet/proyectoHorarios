@@ -44,9 +44,9 @@
 
     <!-- CONTENT -->
     <HBox>
-        <CheckComboBox fx:id="modulesComboBox" prefWidth="120" title="Modulo"/>
+        <ComboBox fx:id="modulesComboBox" prefWidth="120" promptText="Modulo"/>
         <Region HBox.hgrow="ALWAYS" />
-        <CheckComboBox fx:id="groupsComboBox" prefWidth="120" title="Grupo"/>
+        <ComboBox fx:id="groupsComboBox" prefWidth="120" promptText="Grupo"/>
         <Region HBox.hgrow="ALWAYS" />
 
         <Button onAction="#onAddGroupButtonClick" style="-fx-background-color: transparent;">
