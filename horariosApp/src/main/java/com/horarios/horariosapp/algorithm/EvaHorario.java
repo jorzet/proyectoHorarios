@@ -199,7 +199,7 @@ public class EvaHorario {
                 }
             }
 
-            /*for (Class classB : this.classes) {
+            for (Class classB : this.classes) {
                 Horario classHorarioA =  timeslots.get(classA.getTimeslotId());
                 Horario classHorarioB =  timeslots.get(classB.getTimeslotId());
                 String dayA = classHorarioA.getDay();
@@ -209,12 +209,13 @@ public class EvaHorario {
                 double doubleTimeA = Double.parseDouble(timeA[0]) + Double.parseDouble(timeA[1])/60;
                 double doubleTimeB = Double.parseDouble(timeB[0]) + Double.parseDouble(timeB[1])/60;
 
-                if (dayA.equals(dayB) && Math.abs(doubleTimeB - doubleTimeA) < 2
-                        && classA.getClassId() != classB.getClassId()) {
+                if (dayA.equals(dayB) && Math.abs(doubleTimeB - doubleTimeA) < 2 &&
+                        classA.getModuleId() != classB.getModuleId() &&
+                        classA.getClassId() != classB.getClassId()) {
                     clashes++;
                     break;
                 }
-            }*/
+            }
         }
         return clashes;
     }
