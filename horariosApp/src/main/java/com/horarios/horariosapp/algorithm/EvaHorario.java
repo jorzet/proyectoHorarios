@@ -209,8 +209,7 @@ public class EvaHorario {
                 double doubleTimeA = Double.parseDouble(timeA[0]) + Double.parseDouble(timeA[1])/60;
                 double doubleTimeB = Double.parseDouble(timeB[0]) + Double.parseDouble(timeB[1])/60;
 
-                if (dayA.equals(dayB) && Math.abs(doubleTimeB - doubleTimeA) < 2 &&
-                        classA.getModuleId() != classB.getModuleId() &&
+                if (dayA.equals(dayB) && classA.getModuleId() != classB.getModuleId() &&
                         classA.getClassId() != classB.getClassId()) {
                     clashes++;
                     break;
