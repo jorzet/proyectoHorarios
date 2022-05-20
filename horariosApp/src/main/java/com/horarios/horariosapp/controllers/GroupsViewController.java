@@ -3,6 +3,7 @@ package com.horarios.horariosapp.controllers;
 import com.horarios.horariosapp.Application;
 import com.horarios.horariosapp.controllers.base.BaseController;
 import com.horarios.horariosapp.data.Grupo;
+import com.horarios.horariosapp.data.Match;
 import com.horarios.horariosapp.data.Modulo;
 import com.horarios.horariosapp.repository.Dao;
 import javafx.collections.FXCollections;
@@ -59,12 +60,16 @@ public class GroupsViewController extends BaseController {
         if (groups != null) {
             for (int i = 0; i < modules.size(); i++) {
                 Grupo group = groups.get(i);
-                ArrayList<Integer> modulesId = dao.getAllModulesByGroupId(group.getGroupId());
-                if (modulesId != null) {
+                ArrayList<Match> matches = dao.getAllModulesByGroupId(group.getGroupId());
+                if (matches != null) {
                     StringBuffer ids = new StringBuffer();
                     ids.append("{");
-                    for (Integer integer : modulesId) {
-                        ids.append(integer).append(", ");
+                    for (Match math : matches) {
+                        ids.append("id: ");
+                        ids.append(math.getModuleId());
+                        ids.append(" horas: ");
+                        ids.append(math.getTimes());
+                        ids.append(", ");
                     }
                     ids.append("}");
                     String turno = group.isMatutino() ? "Matutino" : "Vespertino";
@@ -102,7 +107,8 @@ public class GroupsViewController extends BaseController {
                     grupo.setGroupName(groupNameTextField.getText());
                     grupo.setGroupSize(Integer.parseInt(capacityTextField.getText()));
                     grupo.setMatutino(matutino);
-                    grupo.setModuleIds(new int[]{module.getModuleId()});
+                    //grupo.setMatches();
+                    //grupo.setModuleIds(new int[]{module.getModuleId()});
 
                     String result = dao.insertGroup(grupo);
 

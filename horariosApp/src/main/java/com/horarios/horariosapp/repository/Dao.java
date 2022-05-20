@@ -98,6 +98,7 @@ public class Dao {
                             groupModule.setIdGroup(rs.getInt(1));
                             groupModule.setIdModule(rs.getInt(2));
                             groupModule.setIdTeacher(rs.getInt(3));
+                            groupModule.setTimes(rs.getInt(4));
                             groupModules.add(groupModule);
                         }
                         return groupModules;
@@ -324,9 +325,9 @@ public class Dao {
         return null;
     }
 
-    public ArrayList<Integer> getAllModulesByGroupId(int groupId) {
+    public ArrayList<Match> getAllModulesByGroupId(int groupId) {
         connection = new Connection();
-        ArrayList<Integer> modulesId = new ArrayList<>();
+        ArrayList<Match> matches = new ArrayList<>();
         int f = 0;
         try {
             if (connection.initConnection() != null) {
@@ -349,10 +350,12 @@ public class Dao {
                         rs.beforeFirst();
                         System.out.println("No es nulo"+rs);
                         while(rs.next()) {
-                            modulesId.add(rs.getInt(1));
-
+                            Match match = new Match();
+                            match.setModuleId(rs.getInt(1));
+                            match.setTimes(rs.getInt(2));
+                            matches.add(match);
                         }
-                        return modulesId;
+                        return matches;
                     }
                 }
                 else
@@ -666,21 +669,22 @@ public class Dao {
         return result;
     }
 
-    public String insertGroupsModuleTeacher(int idGroup, int idModule, int idTeacher) {
+    public String insertGroupsModuleTeacher(int idGroup, int idModule, int idTeacher, int times) {
         connection = new Connection();
         String result = "";
         try {
             if (connection.initConnection() != null) {
-                SQL = "{call insertGroupsModuleTeacher (?,?,?,?)}";
+                SQL = "{call insertGroupsModuleTeacher (?,?,?,?,?)}";
                 sp = connection.conexion.prepareCall(SQL);
                 sp.setEscapeProcessing(true);
                 sp.setQueryTimeout(20);
                 sp.setInt(1, idGroup);
                 sp.setInt(2, idModule);
                 sp.setInt(3, idTeacher);
-                sp.registerOutParameter(4, java.sql.Types.VARCHAR);
+                sp.setInt(4, times);
+                sp.registerOutParameter(5, java.sql.Types.VARCHAR);
                 sp.execute();
-                result = sp.getString(4);
+                result = sp.getString(5);
             }
         }catch(SQLException e){
             e.printStackTrace();

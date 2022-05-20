@@ -14,7 +14,14 @@ public class TimeResultListCell extends ListCell<TimesResult> {
     private Label teacherName;
     private Label timesLot;
 
-    public TimeResultListCell() {
+    private SHOW_TYPE showType;
+    public enum SHOW_TYPE {
+        GROUP,
+        MODULE,
+        TEACHER,
+        ROOM
+    }
+    public TimeResultListCell(SHOW_TYPE showType) {
         super();
         classNumber = new Label();
         moduleName = new Label();
@@ -22,20 +29,28 @@ public class TimeResultListCell extends ListCell<TimesResult> {
         roomCode = new Label();
         teacherName = new Label();
         timesLot = new Label();
-        content = new HBox(classNumber, moduleName, groupNumber, roomCode, teacherName, timesLot);
+        content = new HBox(classNumber, moduleName, groupNumber, teacherName, roomCode, timesLot);
         content.setSpacing(10);
+        this.showType = showType;
     }
 
     @Override
     protected void updateItem(TimesResult timeResult, boolean empty) {
         super.updateItem(timeResult, empty);
         if (timeResult != null && !empty) { // <== test for null item and empty parameter
-            //classNumber.setText("Clase " + timeResult.getClassNumber() + ":");
-            //moduleName.setText("Asignatura: " + timeResult.getModuleName());
-            groupNumber.setText("Grupo: " + timeResult.getGroupNumber());
-            //roomCode.setText("Aula: " + timeResult.getRoomCode());
-            //teacherName.setText("Profesor: " + timeResult.getTeacherName());
-            //timesLot.setText("Horario: " + timeResult.getTime());
+            if (showType == SHOW_TYPE.GROUP) {
+                groupNumber.setText("Grupo: " + timeResult.getGroupNumber());
+                content = new HBox(groupNumber);
+            } else if (showType == SHOW_TYPE.TEACHER) {
+                teacherName.setText("Profesor: " + timeResult.getTeacherName());
+                content = new HBox(teacherName);
+            } else if (showType == SHOW_TYPE.MODULE) {
+                moduleName.setText("Asignatura: " + timeResult.getModuleName());
+                content = new HBox(moduleName);
+            } else if (showType == SHOW_TYPE.ROOM) {
+                roomCode.setText("Aula: " + timeResult.getRoomCode());
+                content = new HBox(roomCode);
+            }
             setGraphic(content);
         } else {
             setGraphic(null);

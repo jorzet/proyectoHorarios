@@ -53,10 +53,10 @@ BEGIN
 END $$
 
 DELIMITER $$
-CREATE PROCEDURE insertGroupsModuleTeacher(IN idGroup INT, IN idModule INT, IN idTeacher INT, OUT response VARCHAR(100))
+CREATE PROCEDURE insertGroupsModuleTeacher(IN idGroup INT, IN idModule INT, IN idTeacher INT, IN times INT, OUT response VARCHAR(100))
 BEGIN
-  INSERT INTO mydb.Group_has_Module (Group_idGroup, Module_idModule, Module_Teacher_idTeacher)
-  VALUES (idGroup, idModule, idTeacher);
+  INSERT INTO mydb.Group_has_Module (Group_idGroup, Module_idModule, Module_Teacher_idTeacher, times)
+  VALUES (idGroup, idModule, idTeacher, times);
   SET response='Modulo y grupo registrado correctamente';
 END $$
 
@@ -185,9 +185,9 @@ END $$
 DELIMITER $$
 CREATE PROCEDURE getAllModuleIdbyGroupId(IN groupId int, OUT response VARCHAR(100))
 BEGIN
-	IF EXISTS (SELECT m.idModule FROM mydb.module as m JOIN mydb.Group_has_Module as ghm WHERE ghm.Module_idModule=m.idModule and ghm.Group_idGroup=groupId)
+	IF EXISTS (SELECT ghm.Module_idModule FROM mydb.Group_has_Module as ghm WHERE ghm.Group_idGroup=groupId)
 	THEN
-		SELECT m.idModule FROM mydb.module as m JOIN mydb.Group_has_Module as ghm WHERE ghm.Module_idModule=m.idModule AND ghm.Module_Teacher_idTeacher=m.Teacher_idTeacher AND ghm.Group_idGroup=groupId;
+		SELECT ghm.Module_idModule, ghm.times FROM mydb.Group_has_Module as ghm WHERE ghm.Group_idGroup=groupId;
 		SET response = 'OK';
 	ELSE
 		SET response = 'No hay grupos relacionados al moduleId en la BD';

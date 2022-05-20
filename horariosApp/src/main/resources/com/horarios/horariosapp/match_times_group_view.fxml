@@ -48,6 +48,8 @@
         <Region HBox.hgrow="ALWAYS" />
         <ComboBox fx:id="groupsComboBox" prefWidth="120" promptText="Grupo"/>
         <Region HBox.hgrow="ALWAYS" />
+        <ComboBox fx:id="timesComboBox" prefWidth="120" promptText="Horas"/>
+        <Region HBox.hgrow="ALWAYS" />
 
         <Button onAction="#onAddGroupButtonClick" style="-fx-background-color: transparent;">
             <graphic>

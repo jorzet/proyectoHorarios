@@ -31,11 +31,16 @@ public class MatchTimesGroupViewController extends BaseController {
     @FXML
     private ComboBox groupsComboBox;
     @FXML
+    private ComboBox timesComboBox;
+    @FXML
     private ListView groupsModulesResultListView;
 
 
     private ArrayList<Grupo> groups;
     private ArrayList<Modulo> modules;
+
+    private ObservableList<String> observableTimes = FXCollections.observableArrayList(
+            "1","2","3");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -59,6 +64,8 @@ public class MatchTimesGroupViewController extends BaseController {
         }
         groupsComboBox.getItems().addAll(observableGroups);
 
+        timesComboBox.getItems().addAll(observableTimes);
+
         ArrayList<GroupModule> groupModules = dao.getAllModulesAndGroups();
         for (GroupModule groupModule : groupModules) {
             StringBuffer ids = new StringBuffer();
@@ -68,6 +75,8 @@ public class MatchTimesGroupViewController extends BaseController {
             ids.append(groupModule.getIdModule());
             ids.append(",");
             ids.append(groupModule.getIdTeacher());
+            ids.append(", ");
+            ids.append(groupModule.getTimes());
             ids.append("}");
             groupsModulesResultListView.getItems().add("vinculo: "+ids);
         }
@@ -84,14 +93,17 @@ public class MatchTimesGroupViewController extends BaseController {
 
     public void onAddGroupButtonClick(ActionEvent actionEvent) {
         if (groupsComboBox.getSelectionModel().getSelectedItem() != null
-                && modulesComboBox.getSelectionModel().getSelectedItem() != null) {
+                && modulesComboBox.getSelectionModel().getSelectedItem() != null
+                && timesComboBox.getSelectionModel().getSelectedItem() != null) {
+
             if (modules != null && groups != null) {
                 Modulo module = modules.get(modulesComboBox.getSelectionModel().getSelectedIndex());
                 Grupo grupo = groups.get(groupsComboBox.getSelectionModel().getSelectedIndex());
+                Integer times = Integer.parseInt(observableTimes.get(timesComboBox.getSelectionModel().getSelectedIndex()));
 
-                if (module != null && groups != null) {
+                if (module != null && groups != null && times != null) {
                     int idTeacher = module.getRandomProfessorId();
-                    dao.insertGroupsModuleTeacher(grupo.getGroupId(), module.getModuleId(), idTeacher);
+                    dao.insertGroupsModuleTeacher(grupo.getGroupId(), module.getModuleId(), idTeacher, times.intValue());
                     StringBuffer ids = new StringBuffer();
                     ids.append("{");
                     ids.append(grupo.getGroupId());
@@ -99,11 +111,14 @@ public class MatchTimesGroupViewController extends BaseController {
                     ids.append(module.getModuleId());
                     ids.append(",");
                     ids.append(idTeacher);
+                    ids.append(",");
+                    ids.append(times);
                     ids.append("}");
                     groupsModulesResultListView.getItems().add("vinculo: "+ids);
 
                     modulesComboBox.getSelectionModel().clearSelection();
                     groupsComboBox.getSelectionModel().clearSelection();
+                    timesComboBox.getSelectionModel().clearSelection();
                 }
             } else {
                 showErrorAlertDialog("Error");

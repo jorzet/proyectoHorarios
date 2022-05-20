@@ -5,6 +5,8 @@ public class GroupModule {
     private int idModule;
     private int idTeacher;
 
+    private int times;
+
     public int getIdGroup() {
         return idGroup;
     }
@@ -27,5 +29,13 @@ public class GroupModule {
 
     public int getIdTeacher() {
         return idTeacher;
+    }
+
+    public void setTimes(int times) {
+        this.times = times;
+    }
+
+    public int getTimes() {
+        return times;
     }
 }

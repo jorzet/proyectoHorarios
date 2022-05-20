@@ -39,6 +39,14 @@
             <Label fx:id="solutionLabel" alignment="CENTER" text="Solucion encontrada en :" />
             <Label fx:id="bestSolutionLabel" alignment="CENTER" text="Mejor solucion final:" />
             <Label fx:id="crossLabel" alignment="CENTER" text="Cruces: " />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox>
+                <Button text="Mostrar por grupo" onAction="#showByGroup"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Mostrar por profesor" onAction="#showByTeacher"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Mostrar por modulo" onAction="#showByModule"/>
+            </HBox>
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
     </HBox>

@@ -39,9 +39,7 @@ public class TimesResultViewController implements Initializable {
     private TreeView<TimesResult> timesResultListView;*/
     @FXML
     private ListView timesResultListView;
-
-    private static ObservableList<TimesResult> groupsTimeResult = FXCollections.observableArrayList();
-
+    private ObservableList<TimesResult> algorithmTimesResult = FXCollections.observableArrayList();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         computeTimesResult();
@@ -80,29 +78,32 @@ public class TimesResultViewController implements Initializable {
         for (Class bestClass : classes) {
             TimesResult timeResult = new TimesResult();
 
-            timeResult.setClassNumber(String.valueOf(classIndex));
-            timeResult.setModuleName(timetable.getModule(bestClass.getModuleId()).getModuleName());
-            timeResult.setModuleCode(timetable.getModule(bestClass.getModuleId()).getModuleCode());
-            timeResult.setGroupNumber(String.valueOf(timetable.getGroup(bestClass.getGroupId()).getGroupId()));
-            timeResult.setRoomCode(timetable.getRoom(bestClass.getRoomId()).getRoomNumber());
-            timeResult.setTeacherName(timetable.getProfessor(bestClass.getProfessorId()).getProfessorName());
-            timeResult.setTime(timetable.getTimeslot(bestClass.getTimeslotId()).getTimeslot());
-            timeResult.setDay(timetable.getTimeslot(bestClass.getTimeslotId()).getDay());
-            timesResult.add(timeResult);
-            dao.insertTimesGroup(timeResult);
+            if (bestClass != null) {
+                timeResult.setClassNumber(String.valueOf(classIndex));
+                timeResult.setModuleName(timetable.getModule(bestClass.getModuleId()).getModuleName());
+                timeResult.setModuleCode(timetable.getModule(bestClass.getModuleId()).getModuleCode());
+                timeResult.setGroupNumber(String.valueOf(timetable.getGroup(bestClass.getGroupId()).getGroupId()));
+                timeResult.setRoomCode(timetable.getRoom(bestClass.getRoomId()).getRoomNumber());
+                timeResult.setTeacherName(timetable.getProfessor(bestClass.getProfessorId()).getProfessorName());
+                timeResult.setTime(timetable.getTimeslot(bestClass.getTimeslotId()).getTimeslot());
+                timeResult.setDay(timetable.getTimeslot(bestClass.getTimeslotId()).getDay());
+                timesResult.add(timeResult);
+                //dao.insertTimesGroup(timeResult);
 
-            System.out.println("Clase " + timeResult.getClassNumber() + ":");
-            System.out.println("Asignatura: " + timeResult.getModuleName());
-            System.out.println("Grupo: " + timeResult.getGroupNumber());
-            System.out.println("Aula: " + timeResult.getRoomCode());
-            System.out.println("Profesor: " + timeResult.getTeacherName());
-            System.out.println("Horario: " + timeResult.getTime());
-            System.out.println("Dia: " + timeResult.getDay());
-            System.out.println("-----");
+                System.out.println("Clase " + timeResult.getClassNumber() + ":");
+                System.out.println("Asignatura: " + timeResult.getModuleName());
+                System.out.println("Grupo: " + timeResult.getGroupNumber());
+                System.out.println("Aula: " + timeResult.getRoomCode());
+                System.out.println("Profesor: " + timeResult.getTeacherName());
+                System.out.println("Horario: " + timeResult.getTime());
+                System.out.println("Dia: " + timeResult.getDay());
+                System.out.println("-----");
 
-            classIndex++;
+                classIndex++;
+            }
         }
 
+        algorithmTimesResult = timesResult;
         Map<String, List<TimesResult>> mapResult =
                 timesResult.stream().collect(Collectors.groupingBy(TimesResult::getGroupNumber));
 
@@ -123,7 +124,7 @@ public class TimesResultViewController implements Initializable {
         });
 
         timesResultListView.setItems(groupsTimeResult);
-        timesResultListView.setCellFactory((Callback<ListView<TimesResult>, ListCell<TimesResult>>) param -> new TimeResultListCell());
+        timesResultListView.setCellFactory((Callback<ListView<TimesResult>, ListCell<TimesResult>>) param -> new TimeResultListCell(TimeResultListCell.SHOW_TYPE.GROUP));
         timesResultListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -206,13 +207,9 @@ public class TimesResultViewController implements Initializable {
 
         if (groups != null) {
             for (Grupo group : groups) {
-                ArrayList<Integer> modulesId = dao.getAllModulesByGroupId(group.getGroupId());
-                if (modulesId != null) {
-                    int[] ids = new int[modulesId.size()];
-                    for (int j = 0; j < modulesId.size(); j++) {
-                        ids[j] = modulesId.get(j);
-                    }
-                    timetable.addGroup(group.getGroupId(), group.getGroupSize(), ids);
+                ArrayList<Match> matches = dao.getAllModulesByGroupId(group.getGroupId());
+                if (matches != null) {
+                    timetable.addGroup(group.getGroupId(), group.getGroupSize(), matches);
                 }
             }
         }
@@ -240,7 +237,131 @@ public class TimesResultViewController implements Initializable {
         timesByGroupViewController.showStage();
     }
 
-    public ObservableList<TimesResult> getGroupsTimeResult() {
-        return groupsTimeResult;
+    public void showByGroup(ActionEvent actionEvent) {
+        Map<String, List<TimesResult>> mapResult = algorithmTimesResult
+                        .stream()
+                        .collect(Collectors.groupingBy(TimesResult::getGroupNumber));
+
+        Iterator<List<TimesResult>> iterator = mapResult.values().iterator();
+        ObservableList<TimesResult> groupsTimeResult = FXCollections.observableArrayList();
+        while (iterator.hasNext()) {
+            List<TimesResult> timesResults = iterator.next();
+            groupsTimeResult.add(timesResults.get(0));
+        }
+
+        Collections.sort(groupsTimeResult, new Comparator<TimesResult>() {
+            @Override
+            public int compare(TimesResult tr1, TimesResult tr2) {
+                double time1 = Integer.parseInt(tr1.getGroupNumber());
+                double time2 = Integer.parseInt(tr2.getGroupNumber());
+                return (time1<time2 ? -1 : (time1==time2 ? 0 : 1));
+            }
+        });
+
+        timesResultListView.setItems(groupsTimeResult);
+        timesResultListView.setCellFactory((Callback<ListView<TimesResult>, ListCell<TimesResult>>) param -> new TimeResultListCell(TimeResultListCell.SHOW_TYPE.GROUP));
+        timesResultListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("clicked on " + timesResultListView.getSelectionModel().getSelectedItem());
+                try {
+                    String group = ((TimesResult) timesResultListView.getSelectionModel().getSelectedItem()).getGroupNumber();
+                    ObservableList<TimesResult> groupTimeResult =
+                            FXCollections.observableArrayList(mapResult.get(group));
+
+                    showTimesByGroupView(groupTimeResult);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void showByTeacher(ActionEvent actionEvent) {
+        Map<String, List<TimesResult>> mapResult =
+                algorithmTimesResult.stream().collect(Collectors.groupingBy(TimesResult::getTeacherName));
+
+        Iterator<List<TimesResult>> iterator = mapResult.values().iterator();
+        ObservableList<TimesResult> teacherTimeResult = FXCollections.observableArrayList();
+        while (iterator.hasNext()) {
+            List<TimesResult> timesResults = iterator.next();
+            teacherTimeResult.add(timesResults.get(0));
+        }
+
+        Collections.sort(teacherTimeResult, new Comparator<TimesResult>() {
+            @Override
+            public int compare(TimesResult tr1, TimesResult tr2) {
+                double time1 = Integer.parseInt(tr1.getGroupNumber());
+                double time2 = Integer.parseInt(tr2.getGroupNumber());
+                return (time1<time2 ? -1 : (time1==time2 ? 0 : 1));
+            }
+        });
+
+        timesResultListView.getItems().clear();
+        timesResultListView.getSelectionModel().clearSelection();
+        timesResultListView.setItems(teacherTimeResult);
+        timesResultListView.setCellFactory(
+                (Callback<ListView<TimesResult>, ListCell<TimesResult>>)
+                        param -> new TimeResultListCell(TimeResultListCell.SHOW_TYPE.TEACHER)
+        );
+        timesResultListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("clicked on " + timesResultListView.getSelectionModel().getSelectedItem());
+                try {
+                    String teacherName = ((TimesResult) timesResultListView.getSelectionModel().getSelectedItem()).getTeacherName();
+                    ObservableList<TimesResult> groupTimeResult =
+                            FXCollections.observableArrayList(mapResult.get(teacherName));
+
+                    showTimesByGroupView(groupTimeResult);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void showByModule(ActionEvent actionEvent) {
+        Map<String, List<TimesResult>> mapResult =
+                algorithmTimesResult.stream().collect(Collectors.groupingBy(TimesResult::getModuleName));
+
+        Iterator<List<TimesResult>> iterator = mapResult.values().iterator();
+        ObservableList<TimesResult> modulesTimeResult = FXCollections.observableArrayList();
+        while (iterator.hasNext()) {
+            List<TimesResult> timesResults = iterator.next();
+            modulesTimeResult.add(timesResults.get(0));
+        }
+
+        Collections.sort(modulesTimeResult, new Comparator<TimesResult>() {
+            @Override
+            public int compare(TimesResult tr1, TimesResult tr2) {
+                double time1 = Integer.parseInt(tr1.getGroupNumber());
+                double time2 = Integer.parseInt(tr2.getGroupNumber());
+                return (time1<time2 ? -1 : (time1==time2 ? 0 : 1));
+            }
+        });
+
+        timesResultListView.getItems().clear();
+        timesResultListView.getSelectionModel().clearSelection();
+        timesResultListView.setItems(modulesTimeResult);
+        timesResultListView.setCellFactory(
+                (Callback<ListView<TimesResult>, ListCell<TimesResult>>)
+                param -> new TimeResultListCell(TimeResultListCell.SHOW_TYPE.MODULE)
+        );
+        timesResultListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("clicked on " + timesResultListView.getSelectionModel().getSelectedItem());
+                try {
+                    String moduleName = ((TimesResult) timesResultListView.getSelectionModel().getSelectedItem()).getModuleName();
+                    ObservableList<TimesResult> groupTimeResult =
+                            FXCollections.observableArrayList(mapResult.get(moduleName));
+
+                    showTimesByGroupView(groupTimeResult);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

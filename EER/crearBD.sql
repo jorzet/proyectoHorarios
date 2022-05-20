@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Group_has_Module` (
   `Group_idGroup` INT NOT NULL,
   `Module_idModule` INT NOT NULL,
   `Module_Teacher_idTeacher` INT NOT NULL,
+  `times` INT NOT NULL,
   PRIMARY KEY (`Group_idGroup`, `Module_idModule`, `Module_Teacher_idTeacher`),
   INDEX `fk_Group_has_Module_Module1_idx` (`Module_idModule` ASC, `Module_Teacher_idTeacher` ASC) VISIBLE,
   INDEX `fk_Group_has_Module_Group1_idx` (`Group_idGroup` ASC) VISIBLE,

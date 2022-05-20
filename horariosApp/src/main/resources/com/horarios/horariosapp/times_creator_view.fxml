@@ -103,9 +103,9 @@
     </HBox>
 
     <HBox>
-        <Label prefWidth="70" text="Vinvular Modulos y Grupos" />
+        <Label prefWidth="200" text="Vinvular Modulos y Grupos" />
         <Region HBox.hgrow="ALWAYS" />
-        <Label fx:id="totalModulesGroupsText" prefWidth="50" text="0" />
+        <Label fx:id="totalModulesGroupsText" prefWidth="50" text="0" alignment="CENTER" />
         <Region HBox.hgrow="ALWAYS" />
 
         <Button onAction="#onEditModulesGroupsButtonClick" style="-fx-background-color: transparent;">

@@ -18,7 +18,8 @@ public class Individual {
         //ArrayList<Horario> times = new Dao().getAllTimes();
         int chromosomeIndex = 0;
         for (Grupo group : timetable.getGroupsAsArray()) {
-            for (int moduleId : group.getModuleIds()) {
+            int[] moduleIds = getModuleIds(group);
+            for (int moduleId : moduleIds) {
                 int timeslotId = timetable.getRandomTimeslot().getTimeslotId();
                 newChromosome[chromosomeIndex] = timeslotId;
                 chromosomeIndex++;
@@ -102,5 +103,19 @@ public class Individual {
             }
         }
         return false;
+    }
+
+    private int[] getModuleIds(Grupo group) {
+        ArrayList<Integer> moduleIdsArray = new ArrayList<>();
+        for (int i = 0; i < group.getMatches().size(); i++) {
+            for (int times = 0; times < group.getMatches().get(i).getTimes(); times++)
+                moduleIdsArray.add(group.getMatches().get(i).getModuleId());
+        }
+
+        int moduleIds[] = new int[moduleIdsArray.size()];
+        for (int i = 0; i < moduleIdsArray.size(); i++) {
+            moduleIds[i] = moduleIdsArray.get(i);
+        }
+        return moduleIds;
     }
 }

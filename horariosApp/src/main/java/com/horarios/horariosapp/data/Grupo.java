@@ -1,17 +1,19 @@
 package com.horarios.horariosapp.data;
 
+import java.util.ArrayList;
+
 public class Grupo {
     private  int groupId;
     private String groupName;
     private  int groupSize;
     private boolean matutino;
-    private  int[] moduleIds;
+    private ArrayList<Match> matches;
 
     public Grupo() {}
-    public Grupo(int groupId, int groupSize, int[] moduleIds){
+    public Grupo(int groupId, int groupSize, ArrayList<Match> matches){
         this.groupId = groupId;
         this.groupSize = groupSize;
-        this.moduleIds = moduleIds;
+        this.matches = matches;
     }
 
     public void setGroupId(int groupId) {
@@ -22,8 +24,8 @@ public class Grupo {
         this.groupSize = groupSize;
     }
 
-    public void setModuleIds(int[] moduleIds) {
-        this.moduleIds = moduleIds;
+    public void setMatches(ArrayList<Match> matches) {
+        this.matches = matches;
     }
 
     public int getGroupId(){
@@ -32,8 +34,9 @@ public class Grupo {
     public int getGroupSize(){
         return this.groupSize;
     }
-    public int[] getModuleIds() {
-        return this.moduleIds;
+
+    public ArrayList<Match> getMatches() {
+        return this.matches;
     }
 
     public void setGroupName(String groupName) {
