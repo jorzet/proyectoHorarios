@@ -18,7 +18,7 @@
         </font>
     </Label>
     <HBox>
-        <Label prefWidth="70" text="Salones" />
+        <Label prefWidth="200" text="Salones" />
         <Region HBox.hgrow="ALWAYS" />
         <Label fx:id="totalRoomsText" prefWidth="50" text="0" />
         <Region HBox.hgrow="ALWAYS" />
@@ -35,7 +35,7 @@
     </HBox>
 
     <HBox>
-        <Label prefWidth="70" text="Horarios" />
+        <Label prefWidth="200" text="Horarios" />
         <Region HBox.hgrow="ALWAYS" />
         <Label fx:id="totalTimesText" prefWidth="50" text="0" />
         <Region HBox.hgrow="ALWAYS" />
@@ -52,7 +52,7 @@
     </HBox>
 
     <HBox>
-        <Label prefWidth="70" text="Profesores" />
+        <Label prefWidth="200" text="Profesores" />
         <Region HBox.hgrow="ALWAYS" />
         <Label fx:id="totalTeachersText" prefWidth="50" text="0" />
         <Region HBox.hgrow="ALWAYS" />
@@ -69,7 +69,7 @@
     </HBox>
 
     <HBox>
-        <Label prefWidth="70" text="Modulos" />
+        <Label prefWidth="200" text="Modulos" />
         <Region HBox.hgrow="ALWAYS" />
         <Label fx:id="totalModulesText" prefWidth="50" text="0" />
         <Region HBox.hgrow="ALWAYS" />
@@ -86,7 +86,7 @@
     </HBox>
 
     <HBox>
-        <Label prefWidth="70" text="Grupos" />
+        <Label prefWidth="200" text="Grupos" />
         <Region HBox.hgrow="ALWAYS" />
         <Label fx:id="totalGoupsText" prefWidth="50" text="0" />
         <Region HBox.hgrow="ALWAYS" />
@@ -103,7 +103,7 @@
     </HBox>
 
     <HBox>
-        <Label prefWidth="200" text="Vinvular Modulos y Grupos" />
+        <Label prefWidth="170" text="Vinvular Modulos y Grupos" />
         <Region HBox.hgrow="ALWAYS" />
         <Label fx:id="totalModulesGroupsText" prefWidth="50" text="0" alignment="CENTER" />
         <Region HBox.hgrow="ALWAYS" />

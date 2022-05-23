@@ -70,7 +70,7 @@ public class TimesResultViewController implements Initializable {
 
         solutionLabel.setText("Solución encontrada en: " + generation + " generaciones");
         bestSolutionLabel.setText("Mejor solución final: " + population.getFittest(0).getFitness());
-        crossLabel.setText("Cruces: " + timetable.calcClashes());
+        //crossLabel.setText("Cruces: " + timetable.calcClashes());
 
         System.out.println();
         Class classes[] = timetable.getClasses();
