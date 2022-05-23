@@ -11,8 +11,8 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.horarios.horariosapp.controllers.TimesResultViewController"
       alignment="CENTER"
-      prefHeight="400.0"
-      prefWidth="600.0"
+      prefHeight="600.0"
+      prefWidth="800.0"
       spacing="20.0">
 
     <padding>
@@ -38,14 +38,38 @@
             </Label>
             <Label fx:id="solutionLabel" alignment="CENTER" text="Solucion encontrada en :" />
             <Label fx:id="bestSolutionLabel" alignment="CENTER" text="Mejor solucion final:" />
-            <Label fx:id="crossLabel" alignment="CENTER" text="Cruces: " />
+            <Label fx:id="crossLabel" alignment="CENTER" text="Cruces: 0" />
             <Region HBox.hgrow="ALWAYS" />
             <HBox>
-                <Button text="Mostrar por grupo" onAction="#showByGroup"/>
+                <Button onAction="#showByGroup" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/show_by_group.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
                 <Region HBox.hgrow="ALWAYS" />
-                <Button text="Mostrar por profesor" onAction="#showByTeacher"/>
+                <Button onAction="#showByTeacher" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/show_by_teacher.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
                 <Region HBox.hgrow="ALWAYS" />
-                <Button text="Mostrar por modulo" onAction="#showByModule"/>
+                <Button onAction="#showByModule" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/show_by_module.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
             </HBox>
         </VBox>
         <Region HBox.hgrow="ALWAYS" />

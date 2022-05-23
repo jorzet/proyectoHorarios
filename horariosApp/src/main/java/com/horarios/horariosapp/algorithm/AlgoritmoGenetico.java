@@ -1,5 +1,9 @@
 package com.horarios.horariosapp.algorithm;
 
+import com.horarios.horariosapp.data.Horario;
+
+import java.util.ArrayList;
+
 public class AlgoritmoGenetico {
     private int populationSize;
     private double mutationRate;
@@ -15,8 +19,7 @@ public class AlgoritmoGenetico {
         this.tournamentSize = tournamentSize;
     }
     public Poblacion initPopulation(EvaHorario timetable) {
-        Poblacion population = new Poblacion(this.populationSize, timetable);
-        return population;
+        return new Poblacion(this.populationSize, timetable);
     }
     public boolean isTerminationConditionMet(int generationsCount, int maxGenerations) {
         return (generationsCount > maxGenerations);

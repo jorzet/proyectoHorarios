@@ -44,7 +44,7 @@ public class Modulo {
     }
 
     public int getRandomProfessorId(){
-        int professorId = professorIds[(int) (professorIds.length * Math.random())];
-        return professorId;
+        if (professorIds == null) return -1;
+        return professorIds[(int) (professorIds.length * Math.random())];
     }
 }

@@ -10,10 +10,12 @@ public class Grupo {
     private ArrayList<Match> matches;
 
     public Grupo() {}
-    public Grupo(int groupId, int groupSize, ArrayList<Match> matches){
+    public Grupo(int groupId, String groupName, int groupSize, boolean isMatutino, ArrayList<Match> matches){
         this.groupId = groupId;
+        this.groupName = groupName;
         this.groupSize = groupSize;
         this.matches = matches;
+        this.matutino = isMatutino;
     }
 
     public void setGroupId(int groupId) {

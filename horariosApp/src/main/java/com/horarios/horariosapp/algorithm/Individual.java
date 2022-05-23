@@ -2,10 +2,12 @@ package com.horarios.horariosapp.algorithm;
 
 import com.horarios.horariosapp.data.Grupo;
 import com.horarios.horariosapp.data.Horario;
+import com.horarios.horariosapp.data.Match;
 import com.horarios.horariosapp.data.Modulo;
 import com.horarios.horariosapp.repository.Dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Individual {
     private int[] chromosome;
@@ -15,42 +17,66 @@ public class Individual {
         int numClasses = timetable.getNumClasses();
         int chromosomeLength = numClasses * 3;
         int newChromosome[] = new int[chromosomeLength];
-        //ArrayList<Horario> times = new Dao().getAllTimes();
         int chromosomeIndex = 0;
         for (Grupo group : timetable.getGroupsAsArray()) {
-            int[] moduleIds = getModuleIds(group);
-            for (int moduleId : moduleIds) {
-                int timeslotId = timetable.getRandomTimeslot().getTimeslotId();
-                newChromosome[chromosomeIndex] = timeslotId;
-                chromosomeIndex++;
-                /*if (chromosomeIndex == 0){
-                    newChromosome[chromosomeIndex] = timeslotId;
-                    chromosomeIndex++;
-                } else {
-                    int chromosomeIndexAux = chromosomeIndex;
-                    if (newChromosome[chromosomeIndex] < times.size()) {
-                        Horario classHorarioA = times.get(newChromosome[chromosomeIndex]);
-                        for (int i = 0; i < chromosomeIndexAux - 1; i++) {
-                            if (newChromosome[i] < times.size()) {
-                                Horario classHorarioB = times.get(newChromosome[i]);
-                                String[] timeA = classHorarioA.getTimeslot().replace(" ", "").split("-")[0].split(":");
-                                String[] timeB = classHorarioB.getTimeslot().replace(" ", "").split("-")[0].split(":");
-                                double doubleTimeA = Double.parseDouble(timeA[0]) + Double.parseDouble(timeA[1]) / 60;
-                                double doubleTimeB = Double.parseDouble(timeB[0]) + Double.parseDouble(timeB[1]) / 60;
-                                if (classHorarioA.getDay().equals(classHorarioB.getDay()) &&
-                                        Math.abs(doubleTimeA - doubleTimeB) < 2) {
-                                    newChromosome[chromosomeIndex] = timeslotId;
-                                    chromosomeIndex++;
-                                    i = chromosomeIndexAux - 1;
-                                }
-                            }
+            int[] moduleIds = EvaHorario.getModuleIds(group);
+            int lastTime = -1;
+            for (int i = 0; i < moduleIds.length; i++) {
+                int moduleId = moduleIds[i];
+                int times = getTimesByModule(group, moduleId);
+
+                int left = -1;
+                int right = -1;
+                if (times >= 2) {
+                    if ((i+1) < moduleIds.length -1 && moduleId == moduleIds[i+1]) {
+                        right = moduleIds[i+1];
+                    }
+
+                    if ((i-1) >= 0 && moduleId == moduleIds[i-1]) {
+                        left = moduleIds[i-1];
+                    }
+                }
+                int timeslotId = timetable.getRandomTimeslot(
+                        group.isMatutino(),
+                        lastTime,
+                        moduleId,
+                        left,
+                        right
+                ).getTimeslotId();
+                lastTime = timeslotId;
+                boolean isCorrectTime = false;
+                while (!isCorrectTime) {
+                    boolean hasSameTime = false;
+                    for (int h = 0; h < chromosomeLength/3; h+=3) {
+                        if (timeslotId == newChromosome[h]) {
+                            // horario
+                            hasSameTime = true;
                         }
                     }
-                }*/
 
+                    if (!hasSameTime) {
+                        newChromosome[chromosomeIndex] = timeslotId;
+                        chromosomeIndex++;
+                        isCorrectTime = true;
+                    } else {
+                        timeslotId = timetable.getRandomTimeslot(
+                                group.isMatutino(),
+                                lastTime,
+                                moduleId,
+                                left,
+                                right
+                        ).getTimeslotId();
+                        lastTime = timeslotId;
+                    }
+
+                }
+
+                // aula
                 int roomId = timetable.getRandomRoom().getRoomId();
                 newChromosome[chromosomeIndex] = roomId;
                 chromosomeIndex++;
+
+                // materia
                 Modulo module = timetable.getModule(moduleId);
                 newChromosome[chromosomeIndex] = module.getRandomProfessorId();
                 chromosomeIndex++;
@@ -105,17 +131,12 @@ public class Individual {
         return false;
     }
 
-    private int[] getModuleIds(Grupo group) {
-        ArrayList<Integer> moduleIdsArray = new ArrayList<>();
-        for (int i = 0; i < group.getMatches().size(); i++) {
-            for (int times = 0; times < group.getMatches().get(i).getTimes(); times++)
-                moduleIdsArray.add(group.getMatches().get(i).getModuleId());
+    private int getTimesByModule(Grupo grupo, int moduleId) {
+        int times = 0;
+        for (Match match: grupo.getMatches()) {
+            if (match.getModuleId() == moduleId)
+                times = match.getTimes();
         }
-
-        int moduleIds[] = new int[moduleIdsArray.size()];
-        for (int i = 0; i < moduleIdsArray.size(); i++) {
-            moduleIds[i] = moduleIdsArray.get(i);
-        }
-        return moduleIds;
+        return times;
     }
 }

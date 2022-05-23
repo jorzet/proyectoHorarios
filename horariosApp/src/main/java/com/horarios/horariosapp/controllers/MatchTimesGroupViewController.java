@@ -103,22 +103,26 @@ public class MatchTimesGroupViewController extends BaseController {
 
                 if (module != null && groups != null && times != null) {
                     int idTeacher = module.getRandomProfessorId();
-                    dao.insertGroupsModuleTeacher(grupo.getGroupId(), module.getModuleId(), idTeacher, times.intValue());
-                    StringBuffer ids = new StringBuffer();
-                    ids.append("{");
-                    ids.append(grupo.getGroupId());
-                    ids.append(",");
-                    ids.append(module.getModuleId());
-                    ids.append(",");
-                    ids.append(idTeacher);
-                    ids.append(",");
-                    ids.append(times);
-                    ids.append("}");
-                    groupsModulesResultListView.getItems().add("vinculo: "+ids);
+                    if (idTeacher != -1) {
+                        dao.insertGroupsModuleTeacher(grupo.getGroupId(), module.getModuleId(), idTeacher, times.intValue());
+                        StringBuffer ids = new StringBuffer();
+                        ids.append("{");
+                        ids.append(grupo.getGroupId());
+                        ids.append(",");
+                        ids.append(module.getModuleId());
+                        ids.append(",");
+                        ids.append(idTeacher);
+                        ids.append(",");
+                        ids.append(times);
+                        ids.append("}");
+                        groupsModulesResultListView.getItems().add("vinculo: " + ids);
 
-                    modulesComboBox.getSelectionModel().clearSelection();
-                    groupsComboBox.getSelectionModel().clearSelection();
-                    timesComboBox.getSelectionModel().clearSelection();
+                        modulesComboBox.getSelectionModel().clearSelection();
+                        groupsComboBox.getSelectionModel().clearSelection();
+                        timesComboBox.getSelectionModel().clearSelection();
+                    } else {
+                        showWarningAlertDialog("El modulo seleccionado no tiene por lo menos un profesor asignado");
+                    }
                 }
             } else {
                 showErrorAlertDialog("Error");

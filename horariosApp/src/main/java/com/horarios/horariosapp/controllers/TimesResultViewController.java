@@ -40,12 +40,15 @@ public class TimesResultViewController implements Initializable {
     @FXML
     private ListView timesResultListView;
     private ObservableList<TimesResult> algorithmTimesResult = FXCollections.observableArrayList();
+
+    private TimeResultListCell.SHOW_TYPE showType;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         computeTimesResult();
     }
 
     private void computeTimesResult() {
+        showType = TimeResultListCell.SHOW_TYPE.GROUP;
         EvaHorario timetable = getTimesTable();
         AlgoritmoGenetico ga = new AlgoritmoGenetico(100, 0.01, 0.9, 2, 5);
         Poblacion population = ga.initPopulation(timetable);
@@ -73,7 +76,6 @@ public class TimesResultViewController implements Initializable {
         Class classes[] = timetable.getClasses();
         ObservableList<TimesResult> timesResult = FXCollections.observableArrayList();
         int classIndex = 1;
-        Dao dao = new Dao();
 
         for (Class bestClass : classes) {
             TimesResult timeResult = new TimesResult();
@@ -134,7 +136,7 @@ public class TimesResultViewController implements Initializable {
                     ObservableList<TimesResult> groupTimeResult =
                             FXCollections.observableArrayList(mapResult.get(group));
 
-                    showTimesByGroupView(groupTimeResult);
+                    showTimesByGroupView(groupTimeResult, showType);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -209,7 +211,7 @@ public class TimesResultViewController implements Initializable {
             for (Grupo group : groups) {
                 ArrayList<Match> matches = dao.getAllModulesByGroupId(group.getGroupId());
                 if (matches != null) {
-                    timetable.addGroup(group.getGroupId(), group.getGroupSize(), matches);
+                    timetable.addGroup(group.getGroupId(), group.getGroupName(), group.getGroupSize(), group.isMatutino(), matches);
                 }
             }
         }
@@ -232,12 +234,13 @@ public class TimesResultViewController implements Initializable {
         return timesResult1;
     }
 
-    private void showTimesByGroupView(ObservableList<TimesResult> groupsTimeResult) {
-        TimesByGroupViewController timesByGroupViewController = new TimesByGroupViewController(groupsTimeResult);
+    private void showTimesByGroupView(ObservableList<TimesResult> groupsTimeResult, TimeResultListCell.SHOW_TYPE showType) {
+        TimesByGroupViewController timesByGroupViewController = new TimesByGroupViewController(groupsTimeResult, showType);
         timesByGroupViewController.showStage();
     }
 
     public void showByGroup(ActionEvent actionEvent) {
+        showType = TimeResultListCell.SHOW_TYPE.GROUP;
         Map<String, List<TimesResult>> mapResult = algorithmTimesResult
                         .stream()
                         .collect(Collectors.groupingBy(TimesResult::getGroupNumber));
@@ -269,7 +272,7 @@ public class TimesResultViewController implements Initializable {
                     ObservableList<TimesResult> groupTimeResult =
                             FXCollections.observableArrayList(mapResult.get(group));
 
-                    showTimesByGroupView(groupTimeResult);
+                    showTimesByGroupView(groupTimeResult, showType);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -278,6 +281,8 @@ public class TimesResultViewController implements Initializable {
     }
 
     public void showByTeacher(ActionEvent actionEvent) {
+        showType = TimeResultListCell.SHOW_TYPE.TEACHER;
+
         Map<String, List<TimesResult>> mapResult =
                 algorithmTimesResult.stream().collect(Collectors.groupingBy(TimesResult::getTeacherName));
 
@@ -313,7 +318,7 @@ public class TimesResultViewController implements Initializable {
                     ObservableList<TimesResult> groupTimeResult =
                             FXCollections.observableArrayList(mapResult.get(teacherName));
 
-                    showTimesByGroupView(groupTimeResult);
+                    showTimesByGroupView(groupTimeResult, showType);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -322,6 +327,8 @@ public class TimesResultViewController implements Initializable {
     }
 
     public void showByModule(ActionEvent actionEvent) {
+        showType = TimeResultListCell.SHOW_TYPE.MODULE;
+
         Map<String, List<TimesResult>> mapResult =
                 algorithmTimesResult.stream().collect(Collectors.groupingBy(TimesResult::getModuleName));
 
@@ -357,7 +364,7 @@ public class TimesResultViewController implements Initializable {
                     ObservableList<TimesResult> groupTimeResult =
                             FXCollections.observableArrayList(mapResult.get(moduleName));
 
-                    showTimesByGroupView(groupTimeResult);
+                    showTimesByGroupView(groupTimeResult, showType);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

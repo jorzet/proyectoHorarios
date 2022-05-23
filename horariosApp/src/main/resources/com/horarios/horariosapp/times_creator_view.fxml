@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.horarios.horariosapp.Controller">
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.horarios.horariosapp.Controller">
 
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -119,5 +119,13 @@
         </Button>
     </HBox>
 
-    <Button onAction="#onCreateTimesButtonClick" text="Crear horario" />
+    <Button onAction="#onCreateTimesButtonClick" style="-fx-background-color: transparent;">
+        <graphic>
+            <ImageView fitHeight="50.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@images/crete_times.png" />
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
 </VBox>

@@ -1,7 +1,9 @@
 package com.horarios.horariosapp.algorithm;
 
 import com.horarios.horariosapp.algorithm.Individual;
+import com.horarios.horariosapp.data.Horario;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
