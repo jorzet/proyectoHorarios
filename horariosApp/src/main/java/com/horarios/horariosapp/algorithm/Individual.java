@@ -21,6 +21,8 @@ public class Individual {
         for (Grupo group : timetable.getGroupsAsArray()) {
             int[] moduleIds = EvaHorario.getModuleIds(group);
             int lastTime = -1;
+            int lastRoom = -1;
+            int lastProfessorId = -1;
             for (int i = 0; i < moduleIds.length; i++) {
                 int moduleId = moduleIds[i];
                 int times = getTimesByModule(group, moduleId);
@@ -71,10 +73,18 @@ public class Individual {
 
                 }
 
-                // aula
                 int roomId = timetable.getRandomRoom().getRoomId();
-                newChromosome[chromosomeIndex] = roomId;
-                chromosomeIndex++;
+                boolean isCorrectRoom = false;
+                while (!isCorrectRoom) {
+                    if ( lastRoom != roomId) {
+                        newChromosome[chromosomeIndex] = roomId;
+                        chromosomeIndex++;
+                        isCorrectRoom = true;
+                    } else {
+                        roomId = timetable.getRandomRoom().getRoomId();
+                    }
+                }
+                lastRoom = roomId;
 
                 // materia
                 Modulo module = timetable.getModule(moduleId);

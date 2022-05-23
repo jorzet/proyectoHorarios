@@ -1,9 +1,12 @@
-package com.horarios.horariosapp.algorithm;
+package com.horarios.algorithm;
 
-import com.horarios.horariosapp.data.*;
-import com.horarios.horariosapp.data.Class;
+import com.horarios.data.Aula;
+import com.horarios.data.Class;
+import com.horarios.data.Grupo;
+import com.horarios.data.Horario;
+import com.horarios.data.Modulo;
+import com.horarios.data.Profesor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EvaHorario {
@@ -50,12 +53,12 @@ public class EvaHorario {
     public void addModule(int moduleId, String moduleCode, String module, int professorIds[]) {
         this.modules.put(moduleId, new Modulo(moduleId, moduleCode, module, professorIds));
     }
-    public void addGroup(int groupId, String groupName, int groupSize, boolean isMatutino, ArrayList<Match> matches) {
-        this.groups.put(groupId, new Grupo(groupId, groupName, groupSize, isMatutino, matches));
+    public void addGroup(int groupId, int groupSize, int[] moduleIds) {
+        this.groups.put(groupId, new Grupo(groupId, groupSize, moduleIds));
         this.numClasses = 0;
     }
-    public void addTimeslot(int timeslotId, String timeslot, String day) {
-        this.timeslots.put(timeslotId, new Horario(timeslotId, timeslot, day));
+    public void addTimeslot(int timeslotId, String timeslot) {
+        this.timeslots.put(timeslotId, new Horario(timeslotId, timeslot));
     }
     public void createClasses(Individual individual) {
         Class classes[] = new Class[this.getNumClasses()];
@@ -63,9 +66,7 @@ public class EvaHorario {
         int chromosomePos = 0;
         int classIndex = 0;
         for (Grupo group : this.getGroupsAsArray()) {
-
-            int moduleIds[] = getModuleIds(group);
-
+            int moduleIds[] = group.getModuleIds();
             for (int moduleId : moduleIds) {
                 classes[classIndex] = new Class(classIndex, group.getGroupId(), moduleId);
                 classes[classIndex].addTimeslot(chromosome[chromosomePos]);
@@ -97,6 +98,10 @@ public class EvaHorario {
         return (Profesor) this.professors.get(professorId);
     }
     public Modulo getModule(int moduleId) { return (Modulo) this.modules.get(moduleId); }
+    public int[] getGroupModules(int groupId) {
+        Grupo group = (Grupo) this.groups.get(groupId);
+        return group.getModuleIds();
+    }
     public Grupo getGroup(int groupId) {
         return (Grupo) this.groups.get(groupId);
     }
@@ -104,24 +109,9 @@ public class EvaHorario {
         return (Grupo[]) this.groups.values().toArray(new Grupo[this.groups.size()]);
     }
     public Horario getTimeslot(int timeslotId) { return (Horario) this.timeslots.get(timeslotId); }
-
-    public Horario getRandomTimeslot(boolean isMatutino, int lastTime, int currentModuleId, int left, int right) {
+    public Horario getRandomTimeslot() {
         Object[] timeslotArray = this.timeslots.values().toArray();
         Horario timeslot = (Horario) timeslotArray[(int) (timeslotArray.length * Math.random())];
-        if (currentModuleId == left && currentModuleId != right
-                && lastTime != -1 && (lastTime + 1) < timeslots.size()) {
-            return timeslots.get(lastTime + 1);
-        }
-        boolean isCorrectTime = false;
-        while (!isCorrectTime) {
-            String[] time = timeslot.getTimeslot().replace(" ", "").split("-")[1].split(":");
-            double doubleTime = Double.parseDouble(time[0]) + Double.parseDouble(time[1]) / 60;
-
-            if (((isMatutino && doubleTime <= 14) || (!isMatutino && doubleTime >14))) {
-                isCorrectTime = true;
-            } else
-                timeslot = (Horario) timeslotArray[(int) (timeslotArray.length * Math.random())];
-        }
         return timeslot;
     }
     public Class[] getClasses() {
@@ -132,10 +122,9 @@ public class EvaHorario {
             return this.numClasses;
         }
         int numClasses = 0;
-        Grupo groups[] = this.groups.values().toArray(new Grupo[this.groups.size()]);
+        Grupo groups[] = (Grupo[]) this.groups.values().toArray(new Grupo[this.groups.size()]);
         for (Grupo group : groups) {
-            for (Match match: group.getMatches())
-                numClasses += match.getTimes();
+            numClasses += group.getModuleIds().length;
         }
         this.numClasses = numClasses;
         return this.numClasses;
@@ -143,49 +132,33 @@ public class EvaHorario {
     public int calcClashes() {
         int clashes = 0;
         for (Class classA : this.classes) {
-            if (classA != null) {
-                int roomCapacity = this.getRoom(classA.getRoomId()).getRoomCapacity();
-                int groupSize = this.getGroup(classA.getGroupId()).getGroupSize();
-                if (roomCapacity < groupSize) {
+            int roomCapacity = this.getRoom(classA.getRoomId()).getRoomCapacity();
+            int groupSize = this.getGroup(classA.getGroupId()).getGroupSize();
+            if (roomCapacity < groupSize) {
+                clashes++;
+            }
+            for (Class classB : this.classes) {
+                if (classA.getRoomId() == classB.getRoomId() && classA.getTimeslotId() == classB.getTimeslotId()
+                        && classA.getClassId() != classB.getClassId()) {
                     clashes++;
+                    break;
                 }
-                for (Class classB : this.classes) {
-                    if (classA.getRoomId() == classB.getRoomId() && classA.getTimeslotId() == classB.getTimeslotId()
-                            && classA.getClassId() != classB.getClassId()) {
-                        clashes++;
-                        break;
-                    }
+            }
+            for (Class classB : this.classes) {
+                if (classA.getProfessorId() == classB.getProfessorId() && classA.getTimeslotId() == classB.getTimeslotId()
+                        && classA.getClassId() != classB.getClassId()) {
+                    clashes++;
+                    break;
                 }
-                for (Class classB : this.classes) {
-                    if (classA.getProfessorId() == classB.getProfessorId() && classA.getTimeslotId() == classB.getTimeslotId()
-                            && classA.getClassId() != classB.getClassId()) {
-                        clashes++;
-                        break;
-                    }
-                }
-                for (Class classB : this.classes) {
-                    if (classA.getRoomId() == classB.getRoomId() && classA.getProfessorId() == classB.getProfessorId()
-                            && classA.getClassId() != classB.getClassId()) {
-                        clashes++;
-                        break;
-                    }
+            }
+            for (Class classB : this.classes) {
+                if (classA.getRoomId() == classB.getRoomId() && classA.getProfessorId() == classB.getProfessorId()
+                        && classA.getClassId() != classB.getClassId()) {
+                    clashes++;
+                    break;
                 }
             }
         }
         return clashes;
-    }
-
-    public static int[] getModuleIds(Grupo group) {
-        ArrayList<Integer> moduleIdsArray = new ArrayList<>();
-        for (int i = 0; i < group.getMatches().size(); i++) {
-            for (int times = 0; times < group.getMatches().get(i).getTimes(); times++)
-                moduleIdsArray.add(group.getMatches().get(i).getModuleId());
-        }
-
-        int moduleIds[] = new int[moduleIdsArray.size()];
-        for (int i = 0; i < moduleIdsArray.size(); i++) {
-            moduleIds[i] = moduleIdsArray.get(i);
-        }
-        return moduleIds;
     }
 }

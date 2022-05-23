@@ -54,7 +54,7 @@ public class TimesResultViewController implements Initializable {
         Poblacion population = ga.initPopulation(timetable);
         ga.evalPopulation(population, timetable);
         int generation = 1;
-        while (ga.isTerminationConditionMet(generation, 1000) == false
+        while (ga.isTerminationConditionMet(generation, 2000) == false
                 && ga.isTerminationConditionMet(population) == false) {
             System.out.println("G" + generation + " Mejor Individuo: " + population.getFittest(0).getFitness());
             population = ga.crossoverPopulation(population);
@@ -66,7 +66,7 @@ public class TimesResultViewController implements Initializable {
         System.out.println();
         System.out.println("Solución encontrada en: " + generation + " generaciones");
         System.out.println("Mejor solución final: " + population.getFittest(0).getFitness());
-        System.out.println("Cruces: " + timetable.calcClashes());
+        //System.out.println("Cruces: " + timetable.calcClashes());
 
         solutionLabel.setText("Solución encontrada en: " + generation + " generaciones");
         bestSolutionLabel.setText("Mejor solución final: " + population.getFittest(0).getFitness());
